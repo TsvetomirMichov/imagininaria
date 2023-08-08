@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import Navbar from '../../components/Navbar/Navbar';
 import { Box, Button, TextField, Typography } from '@mui/material';
 
-
 import Footer from '../../components/Footer/Footer'
 import TopImageLeft1 from '../../images/about/image.webp'
 import TopImageLeft2 from '../../images/about/about2.webp'
@@ -227,9 +226,9 @@ const CreatePost = ({ title }) => {
                                             onChange={(e) => setPostDetails((prev) => ({ ...prev, lastName: e.target.value }))}
                                             sx={{ mb: '1em' }}
                                         />
-                                        <button variant="contained" color="warning" type="submit" >
+                                        <Button variant="contained" color="warning" type="submit" sx={{p:3,height:'2em'}} >
                                             Submit
-                                        </button>
+                                        </Button>
                                     </form>
                                 </Box>
                             </Box>
