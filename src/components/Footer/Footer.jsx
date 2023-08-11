@@ -26,9 +26,10 @@ const Footer = () => {
           sx={{
             display: 'flex',
             alignItems: 'center',
+            width: '7em',
           }}
         >
-          <img src={logo_about} width={100} height={40} alt="Import image" />
+          <img src={logo_about} width={'100%'}  alt="Import image" />
           
         </Box>
         <Box p={2} mr={15}>

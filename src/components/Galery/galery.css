@@ -1,0 +1,31 @@
+.image-list-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .image-list-item {
+    position: relative;
+    
+  }
+  
+  .hovered-element {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    height:5em;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.3s, opacity 0.3s;
+  }
+  
+  .image-list-item:hover .hovered-element {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  .box {
+    color: white;
+  }
+  

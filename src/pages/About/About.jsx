@@ -4,23 +4,6 @@ import TopImageRight1 from '../../images/about/about1.webp'
 import TopImageRight2 from '../../images/about/about4.webp'
 import logo_about from '../../images/imaginaria-color.png'
 
-//   {/* {
-//                     dataPost.map((item,i)=>{
-//                         console.log(item)
-//                     })
-//                 } */}
-//                 {dataPost.map((item) => {
-//                     console.log(item)
-//                 }
-//                     // <Box key={i}>
-//                     //     <Box>
-//                     //         <Typography sx={{ color: 'white' }}>
-//                     //             Made by :{item.userEmail}
-//                     //         </Typography>
-//                     //     </Box>
-//                     // </Box>
-//                 )}
-
 import CenterImageLeft1 from '../../images/about/about_left.webp'
 import CenterImageRight2 from '../../images/about/about_right.webp'
 import CenterImageCenter3 from '../../images/about/about_mobile.webp'
@@ -129,7 +112,12 @@ const About = () => {
                 {/* BoxTop */}
                 <BoxTop sx={{ mt: '16em', padding: '1.5em' }}>
                     <Box sx={{ width: { xs: '90%', sm: '30em', md: '45em' }, mb: '5.5em' }}>
-                        <img src={logo_about} width={200} height={60} alt="Image 1" />
+                        <Box sx={{
+                            width: '16em',
+                            height: '4em'
+                        }}>
+                            <img src={logo_about} width={'100%'} height={'100%'} alt="Image 1" />
+                        </Box>
                         <Typography variant='h4' fontWeight={500} py={3}>About imaginaria</Typography>
                         <Typography variant='h6'>Imaginaria is a free service to inspire your AI image creation. You can browse our growing curated library of images to find something that would work in your next creative project. Once you’ve got something, test it out by downloading our large size, high resolution sample image. If you like the way it’s working - grab the prompt, and head to <Link color={'#000'} fontWeight={600} href={'https://www.midjourney.com/home/?callbackUrl=%2Fapp%2F'}> Midjourney </Link> to make your own unique image!</Typography>
                     </Box>
@@ -161,7 +149,7 @@ const About = () => {
                             <ImageStyled src={CenterImageLeft1} alt="Image 5" />
                         </Box>
                     </ImageContainerCenterLeft>
-                    <Box sx={{ width: { xs: '90%', sm: '45em' },zIndex:1000, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', position: 'relative', textAlign: 'center' }}>
+                    <Box sx={{ width: { xs: '90%', sm: '45em' }, zIndex: 1000, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', position: 'relative', textAlign: 'center' }}>
                         <img src={Flags_about} width={80} height={60} alt="Image 1" />
                         <Typography variant='h4' fontWeight={500} py={3}> Who created these images?</Typography>
                         <Typography variant='h6'>We are a small team of smart, creative people writing prompts like there’s no tomorrow. We go through the results and carefully cull and select images that are high quality, actually usable in real world creative projects, and just awesome to look at! </Typography>

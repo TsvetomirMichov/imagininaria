@@ -1,4 +1,4 @@
-import { Box, Link, Typography, alpha, styled, Drawer, ListItem, ListItemIcon, ListItemText, List, IconButton } from '@mui/material'
+import { Box, Link, Typography, alpha, styled, Drawer, ListItem, ListItemIcon, ListItemText, List, IconButton, Alert, Snackbar } from '@mui/material'
 import React, { useState } from 'react'
 import HeroImage from '../../images/heroImage.png'
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
@@ -15,46 +15,48 @@ import ArchiveIcon from '@mui/icons-material/Archive';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LanguageIcon from '@mui/icons-material/Language';
+import { auth } from '../../pages/lib/firebase';
+import { getAuth, signOut } from 'firebase/auth';
 
 const StyledMenu = styled((props) => (
     <Menu
-      elevation={0}
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'right',
-      }}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      {...props}
+        elevation={0}
+        anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+        }}
+        transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+        }}
+        {...props}
     />
-  ))(({ theme }) => ({
+))(({ theme }) => ({
     '& .MuiPaper-root': {
-      borderRadius: 6,
-      minWidth: 180,
-      color:
-        theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
-      boxShadow:
-        'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
-      '& .MuiMenu-list': {
-        padding: '4px 0',
-      },
-      '& .MuiMenuItem-root': {
-        '& .MuiSvgIcon-root': {
-          fontSize: 18,
-          color: theme.palette.text.secondary,
-          marginRight: theme.spacing(1.5),
+        borderRadius: 6,
+        minWidth: 180,
+        color:
+            theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
+        boxShadow:
+            'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+        '& .MuiMenu-list': {
+            padding: '4px 0',
         },
-        '&:active': {
-          backgroundColor: alpha(
-            theme.palette.primary.main,
-            theme.palette.action.selectedOpacity,
-          ),
+        '& .MuiMenuItem-root': {
+            '& .MuiSvgIcon-root': {
+                fontSize: 18,
+                color: theme.palette.text.secondary,
+                marginRight: theme.spacing(1.5),
+            },
+            '&:active': {
+                backgroundColor: alpha(
+                    theme.palette.primary.main,
+                    theme.palette.action.selectedOpacity,
+                ),
+            },
         },
-      },
     },
-  }));
+}));
 
 const BoxContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -123,7 +125,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 const StyledList = styled(List)({
-    width: "90vw",
 });
 
 const StyledLink = styled(Link)({
@@ -150,6 +151,32 @@ const Hero = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const auth = getAuth();
+    let user = auth.currentUser
+
+    const [alert, setAllert] = useState('')
+    const [openAlert, setOpenAllert] = useState(false)
+
+
+    const handleLogout = () => {
+        signOut(auth).then(() => {
+            setAllert('success')
+            setOpenAllert(true);
+            localStorage.removeItem('userId')
+        }).catch((error) => {
+            setAllert('error')
+        });
+    }
+
+    const handleCloseAlert = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenAllert(false);
+    };
+
+
 
     return (
         <Box sx={{
@@ -184,16 +211,32 @@ const Hero = () => {
                 }}>
                     About Imaginaria
                 </Link>
-                <Link href="/becomeACreator" sx={{
-                    px: '1em',
-                    color: 'white',
-                    fontWeight: 500,
-                    fontSize: '0.9em',
-                    alignItems: 'center',
-                    display: { xs: 'none', md: 'flex' }
-                }}>
-                    Become a creator
-                </Link>
+                {/* Login in or not */}
+                {
+                    user ?
+                        <Button onClick={handleLogout} sx={{
+                            px: '1em',
+                            color: 'white',
+                            fontWeight: 600,
+                            fontSize: '0.9em',
+                            alignItems: 'center',
+                            display: { xs: 'none', md: 'flex' }
+                        }}>
+                            Log out
+                        </Button>
+                        :
+                        <Link href="/becomeACreator" sx={{
+                            px: '1em',
+                            color: 'white',
+                            fontWeight: 600,
+                            fontSize: '0.9em',
+                            alignItems: 'center',
+                            display: { xs: 'none', md: 'flex' }
+                        }}>
+                            Log in
+                        </Link>
+                }
+                {/* Login in or not */}
                 <Link href="/contact">
                     <EmailOutlinedIcon sx={{
                         width: '0.8em',
@@ -214,8 +257,8 @@ const Hero = () => {
             <BoxContainer >
                 <Typography sx={{ fontSize: '2.3em', color: 'white' }}>imaginaria</Typography>
                 <Typography sx={{ fontSize: '1.2em', mb: '2em', color: 'white', display: { xs: 'none', sm: 'flex' } }}>Free, curated AI images and prompts for creative projects</Typography>
-                <Search sx={{display:'flex',justifyContent:'space-between'}}>
-                        <Box>
+                <Search sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Box>
 
                         <SearchIconWrapper>
                             <SearchIcon />
@@ -223,8 +266,8 @@ const Hero = () => {
                         <StyledInputBase
                             placeholder="Search AI generated images"
                             inputProps={{ 'aria-label': 'search' }}
-                            />
-                            </Box>
+                        />
+                    </Box>
                     {/* Category */}
                     <Button
                         id="demo-customized-button"
@@ -236,17 +279,18 @@ const Hero = () => {
                         onClick={handleClick}
                         endIcon={<KeyboardArrowDownIcon s />}
                         sx={{
-                            bgcolor:'white',
-                            border:'1px solid lightgray',
-                            borderRadius:'0.9em'
-                            ,color:'black',
-                            padding:'0.5em',
-                            m:'0.5em',
-                            ":hover":{
-                                bgcolor:'white',
-                            }}}
+                            bgcolor: 'white',
+                            border: '1px solid lightgray',
+                            borderRadius: '0.9em'
+                            , color: 'black',
+                            padding: '0.5em',
+                            m: '0.5em',
+                            ":hover": {
+                                bgcolor: 'white',
+                            }
+                        }}
                     >
-                    <LanguageIcon sx={{color:'black'}}/>    All
+                        <LanguageIcon sx={{ color: 'black' }} />    All
                     </Button>
                     <StyledMenu
                         id="demo-customized-menu"
@@ -270,7 +314,7 @@ const Hero = () => {
                             <ArchiveIcon />
                             Archive
                         </MenuItem>
-                       
+
                     </StyledMenu>
 
 
@@ -281,24 +325,23 @@ const Hero = () => {
 
             <Drawer anchor="right" open={open} onClose={handleDrawerClose} sx={{ display: { xs: 'flex', sm: 'flex', md: 'none', lg: 'none', xl: 'none', width: '100vw' } }}>
 
-                <StyledList>
-                    <ListItem button key="Home">
-                        <StyledLink to="/" >
-                            <ListItemText primary="Home" />
-                        </StyledLink>
-                    </ListItem>
-                    <ListItem button key="About">
-                        <StyledLink to="/products/men" >
-                            <ListItemText primary="Men" />
-                        </StyledLink>
-                    </ListItem>
-                    <ListItem button key="Contact">
-                        <StyledLink to="/products/women" >
-                            <ListItemText primary="Women" />
-                        </StyledLink>
-                    </ListItem>
-                </StyledList>
+                <Drawer anchor="right" open={open} onClose={handleDrawerClose} sx={{ display: { xs: 'flex', sm: 'flex', md: 'none', lg: 'none', xl: 'none', width: '100vw', bgcolor: 'black', color: 'white' } }}>
+
+                    <Box>
+                        <Typography>
+                            Home
+                        </Typography>
+                    </Box>
+                </Drawer>
             </Drawer>
+
+
+            <Snackbar open={openAlert} autoHideDuration={6000}>
+                <Alert onClose={handleCloseAlert} severity={alert} sx={{ width: '100%' }}>
+                     {alert} output!
+                </Alert>
+            </Snackbar>
+
         </Box>
     )
 }

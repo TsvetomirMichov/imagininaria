@@ -17,7 +17,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { Link } from 'react-router-dom';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
-import { Drawer, ListItem, ListItemIcon, ListItemText, List } from '@mui/material'
+import { Avatar, Drawer, Tooltip } from '@mui/material'
 import { useState } from 'react';
 
 import Button from '@mui/material/Button';
@@ -27,6 +27,10 @@ import ArchiveIcon from '@mui/icons-material/Archive';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LanguageIcon from '@mui/icons-material/Language';
+import { auth, firestore } from '../../pages/lib/firebase';
+import { getAuth } from 'firebase/auth';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { useEffect } from 'react';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -109,26 +113,90 @@ const StyledMenu = styled((props) => (
     },
 }));
 
+const CustomLink = styled(Link)(({ theme }) => ({
+    color: alpha(theme.palette.common.black, 0.60),
+    textDecoration: 'none',
+    fontWeight: 500,
+    fontSize: '1em',
+    alignItems: 'center',
+    display: 'flex',
+    padding: theme.spacing(0, 2),
+
+}));
+
+const CustomEmailIcon = styled(EmailOutlinedIcon)(({ theme }) => ({
+    width: '0.8em',
+    height: '0.8em',
+    marginRight: theme.spacing(3),
+    color: theme.palette.common.white,
+    backgroundColor: 'rgba(0, 0, 0, 0.9)', // Black background with 80% opacity
+    borderRadius: '10em',
+    padding: '0.4em',
+
+}));
+
 
 
 export default function Navbar() {
 
     const [open, setOpen] = useState(false);
 
-    const [ifUser,setIfUser]=useState('')
+    const [ifUser, setIfUser] = useState('')
+    const [loggedUser, setLoggedUser] = useState([{}])
+
+    const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+    const auth = getAuth()
+    let user= auth.currentUser
+
+    const handleOpenUserMenu = (event) => {
+        setAnchorElUser(event.currentTarget);
+    };
+
+    const handleCloseUserMenu = () => {
+        setAnchorElUser(null);
+    };
+
+
+    React.useEffect(() => {
+        const getData = async () => {
+            if(user){
+                try {
+                    const q = query(collection(firestore, "users"), where("userId", "==", user.uid));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    console.log("No matching posts found.");
+                    return null; // Return null if no matching posts are found
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const res = doc.data()
+                    setLoggedUser(res);
+                });
+
+            } catch (error) {
+                console.error("Error getting post:", error);
+                return null;
+            }
+        }
+        };
+            getData();
+        
+    });
 
     React.useEffect(() => {
         const unsubscribe = () => {
             if (!localStorage.getItem("userId")) {
                 setIfUser('')
-            }else if(localStorage.getItem("userId")){
-              const userUid=localStorage.getItem("userId");
-              setIfUser(userUid);
+            } else if (localStorage.getItem("userId")) {
+                const userUid = localStorage.getItem("userId");
+                setIfUser(userUid);
             }
         };
-    
+
         unsubscribe();
-      },[]);
+    });
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -139,10 +207,10 @@ export default function Navbar() {
     };
 
     // Function to handle scroll event
-   
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openCategory = Boolean(anchorEl);
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -150,63 +218,41 @@ export default function Navbar() {
         setAnchorEl(null);
     };
 
-    
-
-    const CustomLink = styled(Link)(({ theme }) => ({
-        color: alpha(theme.palette.common.black, 0.60),
-        textDecoration: 'none',
-        fontWeight: 500,
-        fontSize: '1em',
-        alignItems: 'center',
-        display: 'flex',
-        padding: theme.spacing(0, 2),
-
-    }));
-
-    const CustomEmailIcon = styled(EmailOutlinedIcon)(({ theme }) => ({
-        width: '0.8em',
-        height: '0.8em',
-        marginRight: theme.spacing(3),
-        color: theme.palette.common.white,
-        backgroundColor: 'rgba(0, 0, 0, 0.9)', // Black background with 80% opacity
-        borderRadius: '10em',
-        padding: '0.4em',
-
-    }));
-
-    const StyledList = styled(List)({
-        width: "90vw",
-    });
-
-    const StyledLink = styled(Link)({
-        textDecoration: "none",
-    });
+    const handleLogout = () => {
+        signOut(auth).then(() => {
+            setAllert('success')
+            setOpenAllert(true);
+            localStorage.removeItem('userId')
+        }).catch((error) => {
+            setAllert('error')
+        });
+    }
 
     return (
-        <Box sx={{ flexGrow: 1, zIndex: 100,maxWidth:'100%' }}>
+        <Box sx={{ flexGrow: 1, zIndex: 100, maxWidth: '100%' }}>
             <AppBar position="static" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.85)' }}>
                 <Toolbar  >
                     <Link to='/' style={{ textDecoration: 'none' }}>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="div"
-                        sx={{ display: { xs: 'none', sm: 'block', color: 'black', pr: '10em', fontWeight: 700 } }}
+                        <Typography
+                            variant="h6"
+                            noWrap
+                            component="div"
+                            sx={{ display: { xs: 'none', sm: 'block', color: 'black', pr: '10em', fontWeight: 700 } }}
                         >
-                        Imaginaria
-                    </Typography>
-                        </Link>
-                    <Search sx={{display:'flex',justifyContent:'space-between'}}>
+                            Imaginaria
+                        </Typography>
+                    </Link>
+                    <Search sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Box>
 
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search AI generated images"
-                            inputProps={{ 'aria-label': 'search' }}
+                            <SearchIconWrapper>
+                                <SearchIcon />
+                            </SearchIconWrapper>
+                            <StyledInputBase
+                                placeholder="Search AI generated images"
+                                inputProps={{ 'aria-label': 'search' }}
                             />
-                            </Box>
+                        </Box>
                         {/* Category */}
                         <Button
                             id="demo-customized-button"
@@ -216,14 +262,14 @@ export default function Navbar() {
                             variant="contained"
                             disableElevation
                             onClick={handleClick}
-                            endIcon={<KeyboardArrowDownIcon  />}
+                            endIcon={<KeyboardArrowDownIcon />}
                             sx={{
                                 bgcolor: 'white',
                                 border: '1px solid lightgray',
                                 borderRadius: '0.9em',
                                 color: 'black',
                                 padding: '0.5em',
-                                ml:'auto',
+                                ml: 'auto',
                                 ":hover": {
                                     bgcolor: 'white',
                                 }
@@ -259,11 +305,68 @@ export default function Navbar() {
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                         <CustomLink to="/about">About Freeflo</CustomLink>
-                        <CustomLink to={ifUser!=='' ? "/newPost":"/becomeACreator"}>{ifUser!=='' ? "Create post":'Become a creator'  }</CustomLink>
-                        <Link href="/contact">
+                        <CustomLink to={ifUser !== '' ? "/newPost" : "/becomeACreator"}>{ifUser !== '' ? "Create post" : 'Become a creator'}</CustomLink>
+                        <Link to="/contact">
                             <CustomEmailIcon />
                         </Link>
 
+                    </Box>
+                    <Box sx={{ flexGrow: 0 }}>
+                        <Tooltip title="My Account">
+                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                <Avatar alt="Remy Sharp" src={loggedUser?.profileImage} />
+                            </IconButton>
+                        </Tooltip>
+                        <Menu
+                            sx={{ mt: '3em' }}
+                            id="menu-appbar"
+                            anchorEl={anchorElUser}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={Boolean(anchorElUser)}
+                            onClose={handleCloseUserMenu}
+                        >
+                            <MenuItem onClick={handleCloseUserMenu}>
+                                {
+                                    loggedUser ?
+                                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                            <Link to={`/user/:${ifUser}`} style={{
+                                                textDecoration: 'none',
+                                                color: 'black'
+                                            }} >
+                                                My Account
+                                            </Link>
+                                            <Button onClick={handleLogout} sx={{
+                                                color: 'black',
+                                                fontWeight: 500,
+                                                alignItems: 'center',
+                                                backgroundColor: 'white',
+                                                mt: '1em',
+                                            }}>
+                                                Log out
+                                            </Button>
+                                        </Box>
+                                        :
+                                        <Link to="/becomeACreator" sx={{
+                                            px: '1em',
+                                            color: 'white',
+                                            fontWeight: 600,
+                                            fontSize: '0.9em',
+                                            alignItems: 'center',
+                                            textDecoration: 'none', // Add this to remove underline
+                                        }}>
+                                            Log in
+                                        </Link>
+                                }
+                            </MenuItem>
+                        </Menu>
                     </Box>
 
                     <Box sx={{ display: { xs: 'flex', md: 'hidden' } }}>
@@ -272,25 +375,13 @@ export default function Navbar() {
                         </IconButton>
                     </Box>
 
-                    <Drawer anchor="right" open={open} onClose={handleDrawerClose} sx={{ display: { xs: 'flex', sm: 'flex', md: 'none', lg: 'none', xl: 'none', width: '100vw' } }}>
+                    <Drawer anchor="right" open={open} onClose={handleDrawerClose} sx={{ display: { xs: 'flex', sm: 'flex', md: 'none', lg: 'none', xl: 'none', width: '100vw', bgcolor: 'black', color: 'white' } }}>
 
-                        <StyledList>
-                            <ListItem button key="Home">
-                                <StyledLink to="/" >
-                                    <ListItemText primary="Home" />
-                                </StyledLink>
-                            </ListItem>
-                            <ListItem button key="About">
-                                <StyledLink to="/products/men" >
-                                    <ListItemText primary="Men" />
-                                </StyledLink>
-                            </ListItem>
-                            <ListItem button key="Contact">
-                                <StyledLink to="/products/women" >
-                                    <ListItemText primary="Women" />
-                                </StyledLink>
-                            </ListItem>
-                        </StyledList>
+                        <Box>
+                            <Typography>
+                                Home
+                            </Typography>
+                        </Box>
                     </Drawer>
                 </Toolbar>
             </AppBar>

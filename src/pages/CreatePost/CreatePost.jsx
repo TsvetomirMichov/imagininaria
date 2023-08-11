@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import Navbar from '../../components/Navbar/Navbar';
 import { Box, Button, TextField, Typography } from '@mui/material';
 
-
 import Footer from '../../components/Footer/Footer'
 import TopImageLeft1 from '../../images/about/image.webp'
 import TopImageLeft2 from '../../images/about/about2.webp'
@@ -44,9 +43,7 @@ const ImageContainer = styled(Box)({
 
 const CreatePost = ({ title }) => {
     const [file, setFile] = useState("")
-    const [data, setData] = useState({})
     const [perc, setPerc] = useState(null)
-    const navigate = useNavigate()
 
     const auth = getAuth();
     const user = auth.currentUser;
@@ -60,9 +57,11 @@ const CreatePost = ({ title }) => {
 
     const inserDate = async () => {
         console.log('start inserting')
-        await addDoc(collection(firestore, 'posts'), {
+       await addDoc(collection(firestore, 'posts'), {
             ...postDetails
         });
+        
+  
     }
 
     const HandleSubmit = (e) => {
@@ -98,6 +97,7 @@ const CreatePost = ({ title }) => {
                         },
                         () => {
                             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                                console.log(downloadURL)
                                 postDetails.imageData = downloadURL
 
                             });
@@ -105,10 +105,8 @@ const CreatePost = ({ title }) => {
                     );
                 }
                 uploadImage()
-                if (perc == 100) {
                     inserDate()
-                }
-
+                
             } catch (err) {
                 console.log(err)
             }
@@ -182,24 +180,24 @@ const CreatePost = ({ title }) => {
                                     justifyContent: 'center',
                                     alignItems: { xs: 'center', sm: 'flex-start' },
                                 }}>
-                               
+
 
                                 <Box className="right" sx={{ ml: { xs: 0, sm: '2em' } }}>
-                                <Box sx={{
-                                    py:3
-                                }}>
-                                    <Typography variant='h4' fontWeight={800}>
-                                        Become a creator
-                                    </Typography>
-                                    <Typography variant='body1' fontWeight={600}>
-                                        Showcase your creations on Imaginaria.
-                                    </Typography>
-                                </Box>
+                                    <Box sx={{
+                                        py: 3
+                                    }}>
+                                        <Typography variant='h4' fontWeight={800}>
+                                            Become a creator
+                                        </Typography>
+                                        <Typography variant='body1' fontWeight={600}>
+                                            Showcase your creations on Imaginaria.
+                                        </Typography>
+                                    </Box>
 
                                     <form onSubmit={HandleSubmit}>
 
                                         <Box className="left" sx={{ mb: { xs: '2em', sm: 0 } }}>
-                                            
+
                                             <img width={190} height={150} src={file ? URL.createObjectURL(file) : UploadIcon} alt="" />
                                             <Box className="formInput" sx={{ mb: '1em' }}>
                                                 <label htmlFor="file">Click to upload image</label>
@@ -227,9 +225,9 @@ const CreatePost = ({ title }) => {
                                             onChange={(e) => setPostDetails((prev) => ({ ...prev, lastName: e.target.value }))}
                                             sx={{ mb: '1em' }}
                                         />
-                                        <button variant="contained" color="warning" type="submit" >
+                                        <Button variant="contained" color="warning" type="submit" sx={{ p: 3, height: '2em' }} >
                                             Submit
-                                        </button>
+                                        </Button>
                                     </form>
                                 </Box>
                             </Box>

@@ -1,4 +1,4 @@
-import { Backdrop, Box, Button, Menu, MenuItem, Typography, alpha } from '@mui/material';
+import { Avatar, Backdrop, Box, Button, Menu, MenuItem, Typography, alpha } from '@mui/material';
 import { collection, query, where, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from 'react';
 import { firestore } from '../../pages/lib/firebase';
@@ -11,8 +11,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
+import { Link } from 'react-router-dom';
 
 const TransparentBackdrop = ({ open, onClose, url, title }) => {
+    // console.log('urlk ', url)
+    // console.log('title ', title)
     const StyledMenu = styled((props) => (
         <Menu
             elevation={0}
@@ -34,6 +37,7 @@ const TransparentBackdrop = ({ open, onClose, url, title }) => {
     }));
 
     const [dataPost, setDataPost] = useState({}); // Use an object instead of an array
+    const [loggedUser, setLoggedUser] = useState([{}])
 
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -47,28 +51,37 @@ const TransparentBackdrop = ({ open, onClose, url, title }) => {
 
     const [isDownloadClicked, setIsDownloadClicked] = useState(false);
 
-    const handleDownloadClick = () => {
+    const handleDownloadClick = async () => {
+        setIsDownloadClicked(true);
+
+        // Replace imageUrl with the actual URL of the image in Firebase Storage
+        const imagePath = url;
+
+
         const storage = getStorage();
-        const starsRef = ref(storage, title);
-      
-        getDownloadURL(starsRef)
-          .then((url) => {
-            // Create a hidden anchor element
-            const link = document.createElement('a');
-            link.href = url;
-            link.target = '_blank'; // Open the link in a new tab
-            link.download = title; // Set the file name for download
-            link.click(); // Trigger the click event on the anchor element
-          })
-          .catch((error) => {
-            console.error('Error getting download URL:', error);
-          });
-      };
+        try {
+            const imageUrl = await getDownloadURL(ref(storage, imagePath));
+
+            const downloadLink = document.createElement("a");
+            downloadLink.href = imageUrl;
+            downloadLink.download = imageUrl; // Set the desired download file name
+
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+
+            document.body.removeChild(downloadLink);
+
+            setIsDownloadClicked(false);
+        } catch (error) {
+            console.error("Error fetching image:", error);
+            setIsDownloadClicked(false);
+        }
+    };
 
     useEffect(() => {
         const getData = async () => {
             try {
-                const q = query(collection(firestore, "posts"), where("imageData", "==", title));
+                const q = query(collection(firestore, "posts"), where("imageData", "==", url));
                 const querySnapshot = await getDocs(q);
 
                 if (querySnapshot.empty) {
@@ -78,6 +91,7 @@ const TransparentBackdrop = ({ open, onClose, url, title }) => {
 
                 const post = querySnapshot.docs[0].data();
                 setDataPost({ ...post });
+                // console.log(dataPost)
             } catch (error) {
                 console.error("Error getting post:", error);
                 return null;
@@ -85,7 +99,37 @@ const TransparentBackdrop = ({ open, onClose, url, title }) => {
         };
 
         getData();
-    }, [open]);
+    }, [url]);
+
+    useEffect(() => {
+        const getUserData = async () => {
+            if (dataPost.userId) {
+
+                try {
+                    // console.log('user id : ', dataPost?.userId)
+                    const q = query(collection(firestore, "users"), where("userId", "==", dataPost?.userId));
+                    const querySnapshot = await getDocs(q);
+
+                    if (querySnapshot.empty) {
+                        console.log("No matching posts found.");
+                        return null; // Return null if no matching posts are found
+                    }
+
+                    querySnapshot.forEach((doc) => {
+                        const res = doc.data()
+                        setLoggedUser(res);
+                        // console.log("logeed ;", loggedUser)
+                    });
+
+                } catch (error) {
+                    console.error("Error getting post:", error);
+                    return null;
+                }
+            }
+        };
+
+        getUserData();
+    }, [dataPost]);
 
     const handleCopyText = () => {
         // Copy the prompt text to the clipboard
@@ -95,21 +139,48 @@ const TransparentBackdrop = ({ open, onClose, url, title }) => {
     return (
         <Backdrop open={open} style={{ display: 'flex', flexDirection: 'column', zIndex: 999, backgroundColor: 'rgba(0, 0, 0, 0.8)' }}>
             <Box sx={{ width: '100%', height: '2em', display: { xs: 'column', sm: 'flex' }, justifyContent: 'space-between', p: 3 }}>
+
                 <Box sx={{
                     display: 'flex',
-                    flexDirection: 'column',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mt: '2em',
+                    ml: '2em'
 
-                }}>
+                }} gap={3}>
+                    <Avatar alt='acount image' src={loggedUser.profileImage} sx={{
+                        width: '2.5em',
+                        height: '2.5em'
+                    }} />
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                    }} >
 
-                    <Typography variant='body1' fontWeight={600} sx={{ color: 'white' }}>
-                        MADE BY {/* Accessing the "userEmail" property */}
-                    </Typography>
-                    <Typography sx={{ color: 'white' }}>
-                        {dataPost.userEmail} {/* Accessing the "userEmail" property */}
-                    </Typography>
+                        <Link to={`/user/:${loggedUser.userId}`} style={{
+                            textDecoration: 'none',
+                            color: 'black',
+
+                        }} >
+                            <Typography variant='h5' sx={{
+                                color: 'white',
+                                fontWeight: 'semibold',
+                            }}>
+                                {loggedUser.name}
+                            </Typography>
+                        </Link>
 
 
+                        <Typography sx={{
+                            color: '#949493',
+                            fontSize: '1em'
+                        }}>
+                            {loggedUser.bio}
+                        </Typography>
+                    </Box>
                 </Box>
+
                 <Box sx={{ display: { xs: 'column', sm: 'flex' } }}>
                     {/* Category */}
                     <Button
@@ -138,9 +209,9 @@ const TransparentBackdrop = ({ open, onClose, url, title }) => {
                         anchorEl={anchorEl}
                         open={openCategory}
                         onClose={handleClose}
-                        
+
                     >
-                        <MenuItem onClick={handleCopyText} sx={{width:'auto', height: '100%', }}>
+                        <MenuItem onClick={handleCopyText} sx={{ width: 'auto', height: '100%', }}>
                             <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                                 <Typography sx={{
                                     display: 'flex',
@@ -156,7 +227,6 @@ const TransparentBackdrop = ({ open, onClose, url, title }) => {
                     </StyledMenu>
                     {/* Category   */}
                     <Button
-                        download={url}
                         sx={{
                             width: '11em',
                             mx: 3,
