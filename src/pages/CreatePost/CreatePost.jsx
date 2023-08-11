@@ -57,11 +57,11 @@ const CreatePost = ({ title }) => {
 
     const inserDate = async () => {
         console.log('start inserting')
-       await addDoc(collection(firestore, 'posts'), {
+        await addDoc(collection(firestore, 'posts'), {
             ...postDetails
         });
-        
-  
+
+
     }
 
     const HandleSubmit = (e) => {
@@ -105,8 +105,10 @@ const CreatePost = ({ title }) => {
                     );
                 }
                 uploadImage()
+                if (postDetails.imageData !== '') {
                     inserDate()
-                
+                }
+
             } catch (err) {
                 console.log(err)
             }
