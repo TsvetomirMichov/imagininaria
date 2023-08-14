@@ -30,7 +30,7 @@ function App() {
         <Route path="signup" element={<SignupPage />} />        
         <Route path="contact" element={<Contact />} />    
         <Route path="user/:id" element={<UserAcc />} />    
-        <Route path="filter/:[keywords]" element={<FilterGallery />} />    
+        <Route path="filter/:keywords" element={<FilterGallery />} />    
         {/* End Dash */}
       </Route>
     </Routes>

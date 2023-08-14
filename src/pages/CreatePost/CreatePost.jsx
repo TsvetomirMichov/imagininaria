@@ -57,9 +57,13 @@ const CreatePost = ({ title }) => {
 
     const inserDate = async () => {
         console.log('start inserting')
-        await addDoc(collection(firestore, 'posts'), {
+       let res= await addDoc(collection(firestore, 'posts'), {
             ...postDetails
         });
+        if(res.id){
+            setFile("")
+            postDetails.prompt=''
+        }
 
 
     }
@@ -105,6 +109,7 @@ const CreatePost = ({ title }) => {
                     );
                 }
                 uploadImage()
+                console.log('postDetails ',postDetails.imageData)
                 if (postDetails.imageData !== '') {
                     inserDate()
                 }

@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import { Avatar, Button, Menu, MenuItem, Typography, useMediaQuery, useTheme } from '@mui/material';
-import { listAll } from 'firebase/storage';
+import { getStorage, listAll } from 'firebase/storage';
 import { firestore, storage } from "../../pages/lib/firebase"
 import { ref, getDownloadURL } from "firebase/storage";
 import { useState } from 'react';
@@ -18,6 +18,8 @@ import Collapse from '@mui/material/Collapse';
 import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
 
+import Popover from '@mui/material/Popover';
+
 export default function Galery() {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm')); // Check if the screen is small (less than or equal to 'sm' breakpoint)
@@ -28,6 +30,46 @@ export default function Galery() {
   const [checked, setChecked] = React.useState(false);
   const [state, setState] = React.useState(false); // This is to fix menu bug
   const [checkedSecond, setCheckedSecond] = React.useState(false);
+
+
+  // Pop over
+  const [anchorElPopover, setAnchorElPopover] = React.useState(null);
+
+  const handlePopoverOpen = (event) => {
+    setAnchorElPopover(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorElPopover(null);
+  };
+  const [popoverTimer, setPopoverTimer] = useState(null);
+
+  const handlePopoverOpenDelayed = () => {
+    // Cancel any existing popover timers
+    if (popoverTimer) {
+      clearTimeout(popoverTimer);
+    }
+
+    // Set a new timer to open the popover after 1 second
+    const newTimer = setTimeout(() => {
+    }, 2000); // 1000 milliseconds = 1 second
+
+    setPopoverTimer(newTimer);
+  };
+
+  const handlePopoverCloseDelayed = () => {
+    // Cancel the popover timer when the button is not hovered
+    if (popoverTimer) {
+      clearTimeout(popoverTimer);
+    }
+
+    setPopoverTimer(null);
+    handlePopoverClose();
+  };
+
+
+  const open = Boolean(anchorElPopover);
+  // Pop over
 
   const handleMouseEnterImage = () => {
     setChecked(true);
@@ -44,27 +86,6 @@ export default function Galery() {
   const handleMouseLeaveImageSecond = () => {
     setCheckedSecond(false);
   };
-
-  const StyledMenu = styled((props) => (
-    <Menu
-      elevation={0}
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'right',
-      }}
-      open={state}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      {...props}
-    />
-  ))(({ theme }) => ({
-    '& .MuiPaper-root': {
-      borderRadius: 6,
-      minWidth: 180,
-    }
-  }));
 
   const [isBackdropOpen, setIsBackdropOpen] = useState(false);
 
@@ -88,16 +109,6 @@ export default function Galery() {
     setImageTitle(title)
   };
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const openCategory = Boolean(anchorEl);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseButton = () => {
-    setAnchorEl(null);
-  };
 
   const columns = isSmallScreen ? 1 : 3; // Set the number of columns based on the screen size
 
@@ -162,11 +173,41 @@ export default function Galery() {
 
   // console.log(dataImg)
 
-  const handleCopyText = () => {
+  const handleCopyText = (text) => {
     // Copy the prompt text to the clipboard
-    navigator.clipboard.writeText(dataPost.prompt);
-};
-  
+    navigator.clipboard.writeText(text);
+  };
+
+  const [isDownloadClicked, setIsDownloadClicked] = useState(false);
+
+  const handleDownloadClick = async (url) => {
+    setIsDownloadClicked(true);
+
+    // Replace imageUrl with the actual URL of the image in Firebase Storage
+    const imagePath = url;
+
+
+    const storage = getStorage();
+    try {
+      const imageUrl = await getDownloadURL(ref(storage, imagePath));
+
+      const downloadLink = document.createElement("a");
+      downloadLink.href = imageUrl;
+      downloadLink.download = imageUrl; // Set the desired download file name
+
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+
+      document.body.removeChild(downloadLink);
+
+      setIsDownloadClicked(false);
+    } catch (error) {
+      console.error("Error fetching image:", error);
+      setIsDownloadClicked(false);
+    }
+  };
+
+
 
   return (
 
@@ -201,8 +242,8 @@ export default function Galery() {
                 }} gap={3}>
                   <Avatar alt='acount image' sx={{
                     width: '2em',
-                    height:'2em',
-                    ml:'1em'
+                    height: '2em',
+                    ml: '1em'
                   }} src={hoveredUser.profileImage} />
                   <Box sx={{
                     display: 'flex',
@@ -214,9 +255,9 @@ export default function Galery() {
                     <Link to={`/user/:${hoveredUser.userId}`} style={{
                       textDecoration: 'none',
                       color: 'black',
-                      
+
                     }} >
-                   <Typography variant='h6' sx={{
+                      <Typography variant='h6' sx={{
                         color: 'white',
 
                       }}>
@@ -258,6 +299,7 @@ export default function Galery() {
                                 color: 'white',
                               }
                             }}
+                            onClick={() => handleDownloadClick(item.imageData)}
                           >
                             <ArrowCircleDownIcon sx={{ width: '2.9em' }} /> <Typography fontSize={'0.9em'} pr={'1.6em'}>  Download</Typography>
                           </Button>
@@ -265,9 +307,9 @@ export default function Galery() {
                       </Box>
                     </Collapse>
                   </Box>
-                  <Collapse  orientation="horizontal" in={checkedSecond} collapsedSize={30} sx={{ borderRadius: '0.2em',zIndex:1 }}>
-                    <Box onMouseEnter={handleMouseEnterImageSecond}
-                      onMouseLeave={handleMouseLeaveImageSecond}>
+
+                  <Collapse orientation="horizontal" in={checkedSecond} collapsedSize={40} sx={{ borderRadius: '0.2em', zIndex: 100 }}>
+                    <Box onMouseEnter={handleMouseEnterImageSecond} onMouseLeave={handleMouseLeaveImageSecond} sx={{zIndex:10}}>
                       <Button
                         sx={{
                           width: '15em',
@@ -280,41 +322,62 @@ export default function Galery() {
                             color: 'white',
                           }
                         }}
-                        endIcon={<KeyboardArrowDownIcon />}
-                        onClick={handleClick}
+                        onMouseEnter={handlePopoverOpenDelayed && handlePopoverOpen}
+                        onMouseLeave={handlePopoverCloseDelayed}
+                        onClick={() => handleCopyText(item.prompt)}
                       >
                         <ContentCopyIcon sx={{ width: '0.9em', pr: 2 }} /> <Typography fontSize={'0.9em'}>  Get prompt </Typography>
                       </Button>
-                      <StyledMenu
-                        id="demo-customized-menu"
-                        MenuListProps={{
-                          'aria-labelledby': 'demo-customized-button',
+                      <Popover
+                        id="mouse-over-popover"
+                        sx={{
+                          pointerEvents: 'none',
+                          mb: '10em',
+                          color: 'white', // Set text color
+                          padding: '0.5em', // Add padding
                         }}
-                        anchorEl={anchorEl}
-                        open={openCategory && Boolean(anchorEl)} // Check if anchorEl is truthy
-                        onClose={handleCloseButton}
+                        open={open}
+                        anchorEl={anchorElPopover}
+                        anchorOrigin={{
+                          vertical: 'bottom',
+                          horizontal: 'center',
+                        }}
+                        transformOrigin={{
+                          vertical: 'top',
+                          horizontal: 'center',
+                        }}
+                        onClose={handlePopoverClose}
+                        disableRestoreFocus
                       >
-                        <MenuItem onClick={handleCopyText} sx={{ width: 'auto', height: '100%' }}>
-                          <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                            <Typography sx={{
-                              display: 'flex',
-                              flexWrap: 'wrap',
-                              fontSize: '0.7em',
-                              maxWidth: '10em',
-                            }}>
-                            {item.prompt}
-                            </Typography>
-                          </div>
-                        </MenuItem>
-                      </StyledMenu>
+                        <Box sx={{
+                            width: 'auto',
+                            backgroundColor: 'black',
+                            p:1
+                            
+                          }}>
+                             <Typography sx={{
+                            width: 'full',
+                            color: 'white',
+                            p: 1
+                          }}>Midjourney Prompt</Typography>
+                            
+
+                          <Typography sx={{
+                            width: '15em',
+                            backgroundColor: 'gray',
+                            color: 'white',
+                            p: 1
+                          }}>{item.prompt}</Typography>
+                        </Box>
+                      </Popover>
                     </Box>
-                    {/* End */}
                   </Collapse>
                 </Box>
               </div>
             )}
           </div>
         ))}
+
       </ImageList>
     </Box>
   );

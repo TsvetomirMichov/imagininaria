@@ -127,10 +127,10 @@ export default function UserAcc() {
                     return null; // Return null if no matching posts are found
                 }
 
-                const res = querySnapshot.docs[0].data()
+                const res = querySnapshot.docs.map((doc) => doc.data())
                 // console.log('res ', res)
-                setDataImg([res])
-                console.log("logeed ;", dataImg)
+                setDataImg(res)
+                // console.log("logeed ;", dataImg)
 
             } catch (error) {
                 console.error("Error getting post:", error);

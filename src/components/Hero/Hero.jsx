@@ -17,6 +17,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LanguageIcon from '@mui/icons-material/Language';
 import { auth } from '../../pages/lib/firebase';
 import { getAuth, signOut } from 'firebase/auth';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -83,9 +84,9 @@ const Search = styled('div')(({ theme }) => ({
     '&:hover': {
         backgroundColor: alpha(theme.palette.common.white, 0.95),
     },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
+
+    marginLeft: "0.5em",
+    width: '95%',
     height: '3.5em',
     padding: 2,
     [theme.breakpoints.up('sm')]: {
@@ -107,7 +108,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
     color: 'inherit',
     textAlign: 'center',
-    width: '80%',
+    width: '100%',
     height: '100%',
     fontSize: '1.2em',
     '& .MuiInputBase-input': {
@@ -116,9 +117,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
         transition: theme.transitions.create('width'),
 
-        width: 'auto',
+        width: '100%',
         [theme.breakpoints.up('md')]: {
-            width: 'auto',
+            width: '100%',
         },
     },
 }));
@@ -133,6 +134,13 @@ const StyledLink = styled(Link)({
 
 
 const Hero = () => {
+
+      // Input base 
+      const [searchKeywords, setSearchKeywords] = useState('');
+    //   console.log('searched key words ', searchKeywords)
+  
+      let navigate = useNavigate()
+  
     const [open, setOpen] = useState(false);
 
     const handleDrawerOpen = () => {
@@ -145,8 +153,10 @@ const Hero = () => {
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openCategory = Boolean(anchorEl);
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
+
     };
     const handleClose = () => {
         setAnchorEl(null);
@@ -176,7 +186,17 @@ const Hero = () => {
         setOpenAllert(false);
     };
 
+  
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter' && searchKeywords !== '') {
+            navigate(`/filter/${searchKeywords}`); // Navigate to the FilterGallery with keywords
+        } else if(event.key === 'Enter' && searchKeywords == '') {
+            navigate(`/filter/${'all'}`); // Navigate to the FilterGallery with keywords
 
+        }
+    };
+
+    // Input base 
 
     return (
         <Box sx={{
@@ -252,20 +272,21 @@ const Hero = () => {
                         display: { xs: 'none', md: 'flex' }
                     }} />
                 </Link>
-
             </Box>
             <BoxContainer >
                 <Typography sx={{ fontSize: '2.3em', color: 'white' }}>imaginaria</Typography>
                 <Typography sx={{ fontSize: '1.2em', mb: '2em', color: 'white', display: { xs: 'none', sm: 'flex' } }}>Free, curated AI images and prompts for creative projects</Typography>
                 <Search sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Box>
-
                         <SearchIconWrapper>
                             <SearchIcon />
                         </SearchIconWrapper>
                         <StyledInputBase
                             placeholder="Search AI generated images"
                             inputProps={{ 'aria-label': 'search' }}
+                            value={searchKeywords}
+                            onChange={(e) => setSearchKeywords(e.target.value)}
+                            onKeyPress={handleKeyPress}
                         />
                     </Box>
                     {/* Category */}
@@ -281,10 +302,9 @@ const Hero = () => {
                         sx={{
                             bgcolor: 'white',
                             border: '1px solid lightgray',
-                            borderRadius: '0.9em'
-                            , color: 'black',
+                            borderRadius: '0.9em',
+                            color: 'black',
                             padding: '0.5em',
-                            m: '0.5em',
                             ":hover": {
                                 bgcolor: 'white',
                             }
@@ -301,18 +321,18 @@ const Hero = () => {
                         open={openCategory}
                         onClose={handleClose}
                     >
-                        <MenuItem onClick={handleClose} disableRipple>
+                        <MenuItem onClick={()=>navigate(`/filter/${'all'}`)} disableRipple>
                             <EditIcon />
-                            All
+                                All
                         </MenuItem>
                         <Divider sx={{ my: 0.5 }} />
-                        <MenuItem onClick={handleClose} disableRipple>
+                        <MenuItem onClick={()=>navigate(`/filter/${'Ilustations'}`)} disableRipple>
                             <FileCopyIcon />
                             Ilustations
                         </MenuItem>
-                        <MenuItem onClick={handleClose} disableRipple>
+                        <MenuItem onClick={()=>navigate(`/filter/${'Style'}`)} disableRipple>
                             <ArchiveIcon />
-                            Archive
+                            Style
                         </MenuItem>
 
                     </StyledMenu>
@@ -338,7 +358,7 @@ const Hero = () => {
 
             <Snackbar open={openAlert} autoHideDuration={6000}>
                 <Alert onClose={handleCloseAlert} severity={alert} sx={{ width: '100%' }}>
-                     {alert} output!
+                    {alert} output!
                 </Alert>
             </Snackbar>
 

@@ -12,6 +12,7 @@ import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
 import { Link } from 'react-router-dom';
+import Popover from '@mui/material/Popover';
 
 const TransparentBackdrop = ({ open, onClose, url, title }) => {
     // console.log('urlk ', url)
@@ -42,12 +43,17 @@ const TransparentBackdrop = ({ open, onClose, url, title }) => {
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openCategory = Boolean(anchorEl);
-    const handleClick = (event) => {
+    const handleClick = (event,text) => {
         setAnchorEl(event.currentTarget);
+        navigator.clipboard.writeText(text);
     };
+
+  
     const handleClose = () => {
         setAnchorEl(null);
     };
+    const id = open ? 'simple-popover' : undefined;
+
 
     const [isDownloadClicked, setIsDownloadClicked] = useState(false);
 
@@ -85,7 +91,7 @@ const TransparentBackdrop = ({ open, onClose, url, title }) => {
                 const querySnapshot = await getDocs(q);
 
                 if (querySnapshot.empty) {
-                    console.log("No matching posts found.");
+                    // console.log("No matching posts found.");
                     return null; // Return null if no matching posts are found
                 }
 
@@ -130,11 +136,6 @@ const TransparentBackdrop = ({ open, onClose, url, title }) => {
 
         getUserData();
     }, [dataPost]);
-
-    const handleCopyText = () => {
-        // Copy the prompt text to the clipboard
-        navigator.clipboard.writeText(dataPost.prompt);
-    };
 
     return (
         <Backdrop open={open} style={{ display: 'flex', flexDirection: 'column', zIndex: 999, backgroundColor: 'rgba(0, 0, 0, 0.8)' }}>
@@ -183,25 +184,66 @@ const TransparentBackdrop = ({ open, onClose, url, title }) => {
 
                 <Box sx={{ display: { xs: 'column', sm: 'flex' } }}>
                     {/* Category */}
-                    <Button
-                        sx={{
-                            width: '15em',
-                            bgcolor: 'white',
-                            color: 'black',
-                            fontSize: '0.6em',
-                            ":hover": {
-                                bgcolor: 'lightgray',
+                    <Box>
+                        <Button
+                            sx={{
+                                width: '15em',
+                                bgcolor: 'white',
                                 color: 'black',
                                 fontSize: '0.6em',
+                                ":hover": {
+                                    bgcolor: 'lightgray',
+                                    color: 'black',
+                                    fontSize: '0.6em',
+                                }
+                            }}
+                            onClick={(e)=>handleClick(e,dataPost.prompt) }
+                            endIcon={<KeyboardArrowDownIcon />
                             }
-                        }}
-                        onClick={handleClick}
-                        endIcon={<KeyboardArrowDownIcon />
-                        }
-                    >
-                        <ContentCopyIcon sx={{ width: '0.7em', height: '0.7em' }} />  Get prompt
-                    </Button>
-                    <StyledMenu
+                        >
+                            <ContentCopyIcon sx={{ width: '0.7em', height: '0.7em' }} />  Get prompt</Button>
+
+                        <Popover
+                            id={id}
+                            sx={{
+                                mb: '10em',
+                                color: 'white', // Set text color
+                                padding: '0.5em', // Add padding,
+                                mt:'1em'
+                            }}
+                            open={openCategory}
+                            anchorEl={anchorEl}
+                            onClose={handleClose}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'left',
+                            }}
+
+                        >
+                            <Box sx={{
+                                width: 'auto',
+                                backgroundColor: 'black',
+                                p: 1,
+
+                            }}>
+                                <Typography sx={{
+                                    width: 'full',
+                                    color: 'white',
+                                    p: 1
+                                }}>Midjourney Prompt</Typography>
+                                <Typography sx={{
+                                    width: '15em',
+                                    backgroundColor: 'gray',
+                                    color: 'white',
+                                    p: 1
+                                }}>
+                                    {dataPost.prompt}
+                                </Typography>
+                            </Box>
+                        </Popover>
+
+                    </Box>
+                    {/* <StyledMenu
                         id="demo-customized-menu"
                         MenuListProps={{
                             'aria-labelledby': 'demo-customized-button',
@@ -224,7 +266,7 @@ const TransparentBackdrop = ({ open, onClose, url, title }) => {
                             </div>
                         </MenuItem>
 
-                    </StyledMenu>
+                    </StyledMenu> */}
                     {/* Category   */}
                     <Button
                         sx={{

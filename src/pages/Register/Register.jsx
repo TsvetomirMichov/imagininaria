@@ -191,32 +191,36 @@ const SignupPage = () => {
                     backgroundColor: '#171717',
                     color: 'white',
                     width: '100%',
-                    height: '100vh',
+                    height: '100%',
                     display: 'flex',
                     flexDirection: 'row',
                     justifyContent: 'space-around',
                     position: 'relative',
                 }}>
 
-                    <Box display="flex" alignItems="center" mr={10}>
-                        <form onSubmit={handleSubmit} style={{ width: '100%', display: 'flex' }}>
+                    <Box display="flex" alignItems="center" mr={10} sx={{
+                        widths: '100%',
+                        height: '100%',
+                        position: 'relative',
+                        my: '5em',
+                        mx: 'auto'
+                    }}>
+                        <form onSubmit={handleSubmit} style={{ width: '100%', height: '100%', display: 'flex' }}>
                             <Box sx={{
                                 display: 'flex',
                                 flexDirection: { xs: 'column', md: 'row' }
                             }}>
-
-
                                 <Box gap={10} mr={15}>
                                     <Typography variant="h4" align="left" gutterBottom>
                                         Register to  Become a creator
                                     </Typography>
                                     <Box className="left" sx={{ mb: { xs: '2em', sm: 0 }, width: '15em', height: '9em', display: 'block' }}>
                                         <img width={'full'} style={{ objectFit: 'cover' }} height={150} src={file ? URL.createObjectURL(file) : UploadIcon} alt="" />
-                                        <Box className="formInput" sx={{ mb: '5em' }}>
-                                            <label htmlFor="file">Profile Image</label>
-                                            
-                                            <input type="file" id="file" onChange={(e) => setFile(e.target.files[0])} />
+                                        <Box className="formInput" sx={{ my: '2em' }}>                                           
+                                            <label htmlFor="file">Click to upload Profile Image</label>
+                                            <input type="file" id="file" style={{ display: 'none' }} onChange={(e) => setFile(e.target.files[0])} />
                                         </Box>
+
                                     </Box>
 
                                     <div>
@@ -254,6 +258,9 @@ const SignupPage = () => {
                                                                     }
                                                                 />
                                                                 <TextField
+                                                                    sx={{
+                                                                        color: 'white'
+                                                                    }}
                                                                     placeholder="Social Link"
                                                                     variant="outlined"
                                                                     fullWidth
@@ -281,7 +288,7 @@ const SignupPage = () => {
                                     </div>
                                 </Box>
 
-                                <Box>
+                                <Box position={'relative'}>
                                     <div style={{ marginBottom: '16px', display: 'block', marginTop: '3em' }}>
                                         <Typography variant="body1" fontWeight="bold">
                                             Email:

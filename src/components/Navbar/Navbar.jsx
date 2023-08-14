@@ -15,7 +15,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import { Avatar, Drawer, Tooltip } from '@mui/material'
 import { useState } from 'react';
@@ -147,7 +147,7 @@ export default function Navbar() {
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
     const auth = getAuth()
-    let user= auth.currentUser
+    let user = auth.currentUser
 
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -160,30 +160,31 @@ export default function Navbar() {
 
     React.useEffect(() => {
         const getData = async () => {
-            if(user){
+            if (user) {
                 try {
                     const q = query(collection(firestore, "users"), where("userId", "==", user.uid));
-                const querySnapshot = await getDocs(q);
+                    const querySnapshot = await getDocs(q);
 
-                if (querySnapshot.empty) {
-                    console.log("No matching posts found.");
-                    return null; // Return null if no matching posts are found
+                    if (querySnapshot.empty) {
+                        // console.log("No matching posts found.");
+                        return null; // Return null if no matching posts are found
+                    }
+
+                    querySnapshot.forEach((doc) => {
+                        const res = doc.data()
+                        // console.log('res data', res)
+                        setLoggedUser(res);
+                    });
+
+                } catch (error) {
+                    console.error("Error getting post:", error);
+                    return null;
                 }
-
-                querySnapshot.forEach((doc) => {
-                    const res = doc.data()
-                    setLoggedUser(res);
-                });
-
-            } catch (error) {
-                console.error("Error getting post:", error);
-                return null;
             }
-        }
         };
-            getData();
-        
-    });
+        getData();
+
+    }, []);
 
     React.useEffect(() => {
         const unsubscribe = () => {
@@ -196,7 +197,7 @@ export default function Navbar() {
         };
 
         unsubscribe();
-    });
+    }, []);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -228,8 +229,22 @@ export default function Navbar() {
         });
     }
 
+    const [searchKeywords, setSearchKeywords] = useState('');
+    // console.log('searched key words ', searchKeywords)
+
+    let navigate = useNavigate()
+
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter' && searchKeywords !== '') {
+            navigate(`/filter/${searchKeywords}`); // Navigate to the FilterGallery with keywords
+        } else if (event.key === 'Enter' && searchKeywords == '') {
+            navigate(`/filter/${'all'}`); // Navigate to the FilterGallery with keywords
+
+        }
+    };
+
     return (
-        <Box sx={{ flexGrow: 1, zIndex: 100, maxWidth: '100%' }}>
+        <Box sx={{ flexGrow: 1, zIndex: 100, width: '100%' }}>
             <AppBar position="static" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.85)' }}>
                 <Toolbar  >
                     <Link to='/' style={{ textDecoration: 'none' }}>
@@ -251,6 +266,9 @@ export default function Navbar() {
                             <StyledInputBase
                                 placeholder="Search AI generated images"
                                 inputProps={{ 'aria-label': 'search' }}
+                                value={searchKeywords}
+                                onChange={(e) => setSearchKeywords(e.target.value)}
+                                onKeyPress={handleKeyPress}
                             />
                         </Box>
                         {/* Category */}
@@ -286,19 +304,20 @@ export default function Navbar() {
                             open={openCategory}
                             onClose={handleClose}
                         >
-                            <MenuItem onClick={handleClose} disableRipple>
+                            <MenuItem onClick={() => navigate(`/filter/${'all'}`)} disableRipple>
                                 <EditIcon />
                                 All
                             </MenuItem>
                             <Divider sx={{ my: 0.5 }} />
-                            <MenuItem onClick={handleClose} disableRipple>
+                            <MenuItem onClick={() => navigate(`/filter/${'Ilustations'}`)} disableRipple>
                                 <FileCopyIcon />
                                 Ilustations
                             </MenuItem>
-                            <MenuItem onClick={handleClose} disableRipple>
+                            <MenuItem onClick={() => navigate(`/filter/${'Style'}`)} disableRipple>
                                 <ArchiveIcon />
-                                Archive
+                                Style
                             </MenuItem>
+
                         </StyledMenu>
                         {/* Category   */}
                     </Search>
@@ -361,7 +380,12 @@ export default function Navbar() {
                                             fontSize: '0.9em',
                                             alignItems: 'center',
                                             textDecoration: 'none', // Add this to remove underline
-                                        }}>
+                                        }}
+                                            style={{
+                                                textDecoration: 'none',
+                                                color: 'black'
+
+                                            }}>
                                             Log in
                                         </Link>
                                 }
