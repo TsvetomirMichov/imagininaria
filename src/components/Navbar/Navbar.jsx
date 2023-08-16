@@ -32,6 +32,7 @@ import { getAuth } from 'firebase/auth';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useEffect } from 'react';
 
+import ImagianariaLogo from '../../images/imaginaria-bw.png'
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -247,15 +248,13 @@ export default function Navbar() {
         <Box sx={{ flexGrow: 1, zIndex: 100, width: '100%' }}>
             <AppBar position="static" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.85)' }}>
                 <Toolbar  >
-                    <Link to='/' style={{ textDecoration: 'none' }}>
-                        <Typography
-                            variant="h6"
-                            noWrap
-                            component="div"
-                            sx={{ display: { xs: 'none', sm: 'block', color: 'black', pr: '10em', fontWeight: 700 } }}
-                        >
-                            Imaginaria
-                        </Typography>
+                    <Link to='/' style={{ textDecoration: 'none',width:'10em',height:'2em' }}>
+                            <img src={ImagianariaLogo} alt="logo" style={{
+                                width:'100%',
+                                height:'auto',
+                                objectFit:'cover'
+                            }} />
+                     
                     </Link>
                     <Search sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Box>
@@ -323,7 +322,7 @@ export default function Navbar() {
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        <CustomLink to="/about">About Freeflo</CustomLink>
+                        <CustomLink to="/about">About Imaginaria</CustomLink>
                         <CustomLink to={ifUser !== '' ? "/newPost" : "/becomeACreator"}>{ifUser !== '' ? "Create post" : 'Become a creator'}</CustomLink>
                         <Link to="/contact">
                             <CustomEmailIcon />
