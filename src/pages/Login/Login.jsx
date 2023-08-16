@@ -36,7 +36,7 @@ const LoginPage = () => {
         Become a creator
         </Typography>
         <Typography variant="body1" align="left" mb={5} gutterBottom>
-        Showcase your creations on Freeflo.
+        Showcase your creations on Imaginaria.
         </Typography>
         <div style={{ marginBottom: '16px' }}>
           <Typography variant="body1" fontWeight="bold">
