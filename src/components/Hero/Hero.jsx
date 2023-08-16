@@ -18,6 +18,7 @@ import LanguageIcon from '@mui/icons-material/Language';
 import { auth } from '../../pages/lib/firebase';
 import { getAuth, signOut } from 'firebase/auth';
 import { Navigate, useNavigate } from 'react-router-dom';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -320,19 +321,24 @@ const Hero = () => {
                         open={openCategory}
                         onClose={handleClose}
                     >
-                        <MenuItem onClick={()=>navigate(`/filter/${'all'}`)} disableRipple>
+                      <MenuItem onClick={()=>navigate(`/filter/${'all'}`)} disableRipple>
                             <EditIcon />
                                 All
                         </MenuItem>
                         <Divider sx={{ my: 0.5 }} />
                         <MenuItem onClick={()=>navigate(`/filter/${'Ilustations'}`)} disableRipple>
+                            <AddAPhotoIcon />
+                            Phototgraphy
+                        </MenuItem>
+                        <MenuItem onClick={()=>navigate(`/filter/${'Ilustations'}`)} disableRipple>
                             <FileCopyIcon />
-                            Ilustations
+                            Illustrations
                         </MenuItem>
                         <MenuItem onClick={()=>navigate(`/filter/${'Style'}`)} disableRipple>
                             <ArchiveIcon />
                             Style
                         </MenuItem>
+
 
                     </StyledMenu>
 
