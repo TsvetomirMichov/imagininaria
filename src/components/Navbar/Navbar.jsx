@@ -66,13 +66,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         // vertical padding + font size from searchIcon
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
         transition: theme.transitions.create('width'),
-        width: '100%',
+        width: '20em', // Set width to 100% to make it full width
         [theme.breakpoints.up('md')]: {
-            width: '100%',
+            width: '20em', // Adjust this value to control the width on larger screens if needed
         },
     },
 }));
-
 
 const StyledMenu = styled((props) => (
     <Menu
