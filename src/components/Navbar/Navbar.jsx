@@ -33,6 +33,7 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useEffect } from 'react';
 
 import ImagianariaLogo from '../../images/imaginaria-bw.png'
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -302,19 +303,23 @@ export default function Navbar() {
                             open={openCategory}
                             onClose={handleClose}
                         >
-                            <MenuItem onClick={() => navigate(`/filter/${'all'}`)} disableRipple>
-                                <EditIcon />
+                      <MenuItem onClick={()=>navigate(`/filter/${'all'}`)} disableRipple>
+                            <EditIcon />
                                 All
-                            </MenuItem>
-                            <Divider sx={{ my: 0.5 }} />
-                            <MenuItem onClick={() => navigate(`/filter/${'Ilustations'}`)} disableRipple>
-                                <FileCopyIcon />
-                                Ilustations
-                            </MenuItem>
-                            <MenuItem onClick={() => navigate(`/filter/${'Style'}`)} disableRipple>
-                                <ArchiveIcon />
-                                Style
-                            </MenuItem>
+                        </MenuItem>
+                        <Divider sx={{ my: 0.5 }} />
+                        <MenuItem onClick={()=>navigate(`/filter/${'Ilustations'}`)} disableRipple>
+                            <AddAPhotoIcon />
+                            Phototgraphy
+                        </MenuItem>
+                        <MenuItem onClick={()=>navigate(`/filter/${'Ilustations'}`)} disableRipple>
+                            <FileCopyIcon />
+                            Illustrations
+                        </MenuItem>
+                        <MenuItem onClick={()=>navigate(`/filter/${'Style'}`)} disableRipple>
+                            <ArchiveIcon />
+                            Style
+                        </MenuItem>
 
                         </StyledMenu>
                         {/* Category   */}
