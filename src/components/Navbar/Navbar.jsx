@@ -67,7 +67,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         // vertical padding + font size from searchIcon
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
         transition: theme.transitions.create('width'),
-        width: '20em', // Set width to 100% to make it full width
+        width: '100%', // Set width to 100% to make it full width
         [theme.breakpoints.up('md')]: {
             width: '20em', // Adjust this value to control the width on larger screens if needed
         },
@@ -258,7 +258,6 @@ export default function Navbar() {
                     </Link>
                     <Search sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Box>
-
                             <SearchIconWrapper>
                                 <SearchIcon />
                             </SearchIconWrapper>
@@ -335,7 +334,7 @@ export default function Navbar() {
                     </Box>
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="My Account">
-                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0,display:{xs:'none',sm:'block'} }}>
                                 <Avatar alt="Remy Sharp" src={loggedUser?.profileImage} />
                             </IconButton>
                         </Tooltip>
