@@ -218,7 +218,7 @@ const Hero = () => {
                 alignContent: 'center',
 
             }}>
-                <IconButton edge="start" aria-label="menu" onClick={handleDrawerOpen} sx={{ display: { xs: 'flex', md: 'none' }, ml: 0, p: 0, zIndex: 1000, color: '#fce4ec' }}>
+                <IconButton edge="start" aria-label="menu" onClick={handleDrawerOpen} sx={{ display: { xs: 'flex', md: 'none' }, ml: 0, p: 0, zIndex: 1000, color: 'black' }}>
                     <MenuIcon />
                 </IconButton>
 
