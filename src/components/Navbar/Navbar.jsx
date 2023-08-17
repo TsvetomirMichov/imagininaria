@@ -19,7 +19,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import { Avatar, Drawer, Tooltip } from '@mui/material'
 import { useState } from 'react';
-
+import CloseIcon from '@mui/icons-material/Close';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import Divider from '@mui/material/Divider';
@@ -31,9 +31,11 @@ import { auth, firestore } from '../../pages/lib/firebase';
 import { getAuth } from 'firebase/auth';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useEffect } from 'react';
-
 import ImagianariaLogo from '../../images/imaginaria-bw.png'
-import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+
+import InstagramIcon from '@mui/icons-material/Instagram';
+import TwitterIcon from '@mui/icons-material/Twitter';
+
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -67,7 +69,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         // vertical padding + font size from searchIcon
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
         transition: theme.transitions.create('width'),
-        width: '100%', // Set width to 100% to make it full width
+        width: '50%', // Set width to 100% to make it full width
         [theme.breakpoints.up('md')]: {
             width: '20em', // Adjust this value to control the width on larger screens if needed
         },
@@ -90,7 +92,7 @@ const StyledMenu = styled((props) => (
 ))(({ theme }) => ({
     '& .MuiPaper-root': {
         borderRadius: 6,
-        minWidth: 180,
+        minWidth: 100,
         color:
             theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
         boxShadow:
@@ -137,6 +139,11 @@ const CustomEmailIcon = styled(EmailOutlinedIcon)(({ theme }) => ({
 }));
 
 
+const linkStyles = {
+    color: 'white',
+    textDecoration: 'none',
+    py: 2,
+};
 
 export default function Navbar() {
 
@@ -248,13 +255,14 @@ export default function Navbar() {
         <Box sx={{ flexGrow: 1, zIndex: 100, width: '100%' }}>
             <AppBar position="static" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.85)' }}>
                 <Toolbar  >
-                    <Link to='/' style={{ textDecoration: 'none',width:'10em',height:'2em' }}>
-                            <img src={ImagianariaLogo} alt="logo" style={{
-                                width:'100%',
-                                height:'auto',
-                                objectFit:'cover'
-                            }} />
-                     
+                    <Link to='/' style={{ textDecoration: 'none', width: '10em', height: '2em', }}>
+
+                        <img src={ImagianariaLogo} alt="logo" style={{
+                            width: '100%',
+                            height: 'auto',
+                            objectFit: 'cover'
+                        }} />
+
                     </Link>
                     <Search sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Box>
@@ -302,30 +310,26 @@ export default function Navbar() {
                             open={openCategory}
                             onClose={handleClose}
                         >
-                      <MenuItem onClick={()=>navigate(`/filter/${'all'}`)} disableRipple>
-                            <EditIcon />
+                            <MenuItem onClick={() => navigate(`/filter/${'all'}`)} disableRipple>
+                                <EditIcon />
                                 All
-                        </MenuItem>
-                        <Divider sx={{ my: 0.5 }} />
-                        <MenuItem onClick={()=>navigate(`/filter/${'Phototgraphy'}`)} disableRipple>
-                            <AddAPhotoIcon />
-                            Phototgraphy
-                        </MenuItem>
-                        <MenuItem onClick={()=>navigate(`/filter/${'Ilustations'}`)} disableRipple>
-                            <FileCopyIcon />
-                            Illustrations
-                        </MenuItem>
-                        <MenuItem onClick={()=>navigate(`/filter/${'Style'}`)} disableRipple>
-                            <ArchiveIcon />
-                            Style
-                        </MenuItem>
+                            </MenuItem>
+                            <Divider sx={{ my: 0.5 }} />
+                            <MenuItem onClick={() => navigate(`/filter/${'Ilustations'}`)} disableRipple>
+                                <FileCopyIcon />
+                                Ilustations
+                            </MenuItem>
+                            <MenuItem onClick={() => navigate(`/filter/${'Style'}`)} disableRipple>
+                                <ArchiveIcon />
+                                Style
+                            </MenuItem>
 
                         </StyledMenu>
                         {/* Category   */}
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        <CustomLink to="/about">About Imaginaria</CustomLink>
+                        <CustomLink to="/about">About Freeflo</CustomLink>
                         <CustomLink to={ifUser !== '' ? "/newPost" : "/becomeACreator"}>{ifUser !== '' ? "Create post" : 'Become a creator'}</CustomLink>
                         <Link to="/contact">
                             <CustomEmailIcon />
@@ -334,7 +338,7 @@ export default function Navbar() {
                     </Box>
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="My Account">
-                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0,display:{xs:'none',sm:'block'} }}>
+                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, display: { xs: 'none', sm: 'block' } }}>
                                 <Avatar alt="Remy Sharp" src={loggedUser?.profileImage} />
                             </IconButton>
                         </Tooltip>
@@ -401,12 +405,134 @@ export default function Navbar() {
                         </IconButton>
                     </Box>
 
-                    <Drawer anchor="right" open={open} onClose={handleDrawerClose} sx={{ display: { xs: 'flex', sm: 'flex', md: 'none', lg: 'none', xl: 'none', width: '100vw', bgcolor: 'black', color: 'white' } }}>
-
-                        <Box>
-                            <Typography>
+                    <Drawer
+                        anchor="right"
+                        open={open}
+                        onClose={handleDrawerClose}
+                        sx={{
+                            display: { xs: 'flex', sm: 'flex', md: 'none', lg: 'none', xl: 'none' },
+                            width: '100%',
+                            height: '100%',
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'flex-start',
+                                alignItems: 'flex-end',
+                                width: '90vw',
+                                height: '100%',
+                                py: 5,
+                                px: 3,
+                                backgroundColor: 'white',
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'flex-end',
+                                    width: '100%',
+                                    height: '2em',
+                                    alignItems: 'center',
+                                    mb: 4,
+                                }}
+                            >
+                                <Link to='/' style={{ textDecoration: 'none', width: '15em', height: '3em' }}>
+                                    <img
+                                        src={ImagianariaLogo}
+                                        alt="logo"
+                                        style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+                                    />
+                                </Link>
+                                <IconButton onClick={handleDrawerClose} sx={{ color: 'black' }}>
+                                    <CloseIcon />
+                                </IconButton>
+                            </Box>
+                            <Link
+                                to="/"
+                                style={{
+                                    color: 'black',
+                                    textDecoration: 'none',
+                                    fontSize: '2em',
+                                    padding: '0.5em',
+                                    fontWeight:'bold'
+                                }}
+                            >
                                 Home
-                            </Typography>
+                            </Link>
+                            <Link
+                                to="/about"
+                                style={{
+                                    color: 'black',
+                                    textDecoration: 'none',
+                                    fontSize: '2em',
+                                    padding: '0.5em',
+                                    fontWeight:'bold'
+                                }}
+                            >
+                                About Us
+                            </Link>
+                            <Link
+                                to="/newPost"
+                                style={{
+                                    color: 'black',
+                                    textDecoration: 'none',
+                                    fontSize: '2em',
+                                    padding: '0.5em',
+                                    fontWeight:'bold'
+                                }}
+                            >
+                                Create Post
+                            </Link>
+                            <Link
+                                to="/contact"
+                                style={{
+                                    color: 'black',
+                                    textDecoration: 'none',
+                                    fontSize: '2em',
+                                    padding: '0.5em',
+                                    fontWeight:'bold'
+                                }}
+                            >
+                                Contact Us
+                            </Link>
+                            {/* Instagram Link */}
+                            <Box sx={{
+                                display:'flex',
+                                flexDirection: 'row',
+                                mt:'auto'
+                            }}>
+                                <Link
+                                    to="https://www.instagram.com/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                        color: 'black',
+                                        textDecoration: 'none',
+                                        fontSize: '1.5em',
+                                        padding: '0.5em'
+                                    }}
+                                >
+                                    <InstagramIcon sx={{ fontSize: '2em', mr: '0.5em' }} />
+
+                                </Link>
+                                {/* Twitter Link */}
+                                <Link
+                                    to="https://twitter.com/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                        color: 'black',
+                                        textDecoration: 'none',
+                                        fontSize: '1.5em',
+                                        padding: '0.5em'
+                                    }}
+                                >
+                                    <TwitterIcon sx={{ fontSize: '2em', mr: '0.5em' }} />
+                                </Link>
+                            </Box>
                         </Box>
                     </Drawer>
                 </Toolbar>
