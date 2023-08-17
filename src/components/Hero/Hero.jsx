@@ -1,6 +1,5 @@
 import { Box, Link, Typography, alpha, styled, Drawer, ListItem, ListItemIcon, ListItemText, List, IconButton, Alert, Snackbar } from '@mui/material'
 import React, { useState } from 'react'
-import HeroImage from '../../images/heroImage.png'
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
@@ -19,6 +18,13 @@ import { auth } from '../../pages/lib/firebase';
 import { getAuth, signOut } from 'firebase/auth';
 import { Navigate, useNavigate } from 'react-router-dom';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import ImagianariaLogo from '../../images/imaginaria-bw.png'
+
+import InstagramIcon from '@mui/icons-material/Instagram';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import CloseIcon from '@mui/icons-material/Close';
+
+import HeroImage from '../../images/heroImage.jpg'
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -117,30 +123,23 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         // vertical padding + font size from searchIcon
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
         transition: theme.transitions.create('width'),
-       width: '100%', // Set width to 100% to make it full width
+
+        width: '100%',
         [theme.breakpoints.up('md')]: {
-         width: '20em', // Adjust this value to control the width on larger screens if needed
+            width: '20em',
         },
     },
 }));
 
 
-const StyledList = styled(List)({
-});
-
-const StyledLink = styled(Link)({
-    textDecoration: "none",
-});
-
-
 const Hero = () => {
 
-      // Input base 
-      const [searchKeywords, setSearchKeywords] = useState('');
+    // Input base 
+    const [searchKeywords, setSearchKeywords] = useState('');
     //   console.log('searched key words ', searchKeywords)
-  
-      let navigate = useNavigate()
-  
+
+    let navigate = useNavigate()
+
     const [open, setOpen] = useState(false);
 
     const handleDrawerOpen = () => {
@@ -186,11 +185,11 @@ const Hero = () => {
         setOpenAllert(false);
     };
 
-  
+
     const handleKeyPress = (event) => {
         if (event.key === 'Enter' && searchKeywords !== '') {
             navigate(`/filter/${searchKeywords}`); // Navigate to the FilterGallery with keywords
-        } else if(event.key === 'Enter' && searchKeywords == '') {
+        } else if (event.key === 'Enter' && searchKeywords == '') {
             navigate(`/filter/${'all'}`); // Navigate to the FilterGallery with keywords
 
         }
@@ -200,7 +199,9 @@ const Hero = () => {
 
     return (
         <Box sx={{
-            width: '100%', height: { xs: '25vh', sm: '40vh', md: '60vh' }, backgroundImage: `url(${HeroImage})`,
+            width: '100%',
+            height: { xs: '25vh', sm: '40vh', md: '70vh' },
+            backgroundImage: `url(${HeroImage})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             width: '100%',
@@ -222,13 +223,14 @@ const Hero = () => {
                 </IconButton>
 
                 <Link href="/about" sx={{
-                    color: 'white',
+                    color: 'black',
                     fontWeight: 500,
-                    fontSize: '0.9em',
-                    alignItems: 'center',
+                    fontSize: '1em',
                     display: { xs: 'none', md: 'flex' }
-
-                }}>
+                }}
+                    style={{
+                        textDecoration: 'none',
+                    }}>
                     About Imaginaria
                 </Link>
                 {/* Login in or not */}
@@ -236,7 +238,7 @@ const Hero = () => {
                     user ?
                         <Button onClick={handleLogout} sx={{
                             px: '1em',
-                            color: 'white',
+                            color: 'black',
                             fontWeight: 600,
                             fontSize: '0.9em',
                             alignItems: 'center',
@@ -247,7 +249,7 @@ const Hero = () => {
                         :
                         <Link href="/becomeACreator" sx={{
                             px: '1em',
-                            color: 'white',
+                            color: 'black',
                             fontWeight: 600,
                             fontSize: '0.9em',
                             alignItems: 'center',
@@ -321,24 +323,23 @@ const Hero = () => {
                         open={openCategory}
                         onClose={handleClose}
                     >
-                      <MenuItem onClick={()=>navigate(`/filter/${'all'}`)} disableRipple>
+                        <MenuItem onClick={() => navigate(`/filter/${'all'}`)} disableRipple>
                             <EditIcon />
-                                All
+                            All
                         </MenuItem>
                         <Divider sx={{ my: 0.5 }} />
-                        <MenuItem onClick={()=>navigate(`/filter/${'Phototgraphy'}`)} disableRipple>
+                        <MenuItem onClick={() => navigate(`/filter/${'Ilustations'}`)} disableRipple>
                             <AddAPhotoIcon />
                             Phototgraphy
                         </MenuItem>
-                        <MenuItem onClick={()=>navigate(`/filter/${'Ilustations'}`)} disableRipple>
+                        <MenuItem onClick={() => navigate(`/filter/${'Ilustations'}`)} disableRipple>
                             <FileCopyIcon />
                             Illustrations
                         </MenuItem>
-                        <MenuItem onClick={()=>navigate(`/filter/${'Style'}`)} disableRipple>
+                        <MenuItem onClick={() => navigate(`/filter/${'Style'}`)} disableRipple>
                             <ArchiveIcon />
                             Style
                         </MenuItem>
-
 
                     </StyledMenu>
 
@@ -350,14 +351,137 @@ const Hero = () => {
 
             <Drawer anchor="right" open={open} onClose={handleDrawerClose} sx={{ display: { xs: 'flex', sm: 'flex', md: 'none', lg: 'none', xl: 'none', width: '100vw' } }}>
 
-                <Drawer anchor="right" open={open} onClose={handleDrawerClose} sx={{ display: { xs: 'flex', sm: 'flex', md: 'none', lg: 'none', xl: 'none', width: '100vw', bgcolor: 'black', color: 'white' } }}>
-
-                    <Box>
-                        <Typography>
+                <Drawer
+                    anchor="right"
+                    open={open}
+                    onClose={handleDrawerClose}
+                    sx={{
+                        display: { xs: 'flex', sm: 'flex', md: 'none', lg: 'none', xl: 'none' },
+                        width: '100%',
+                        height: '100%',
+                    }}
+                >
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'flex-start',
+                            alignItems: 'flex-end',
+                            width: '90vw',
+                            height: '100%',
+                            py: 5,
+                            px: 3,
+                            backgroundColor: 'white',
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'flex-end',
+                                width: '100%',
+                                height: '2em',
+                                alignItems: 'center',
+                                mb: 4,
+                            }}
+                        >
+                            <Link to='/' style={{ textDecoration: 'none', width: '15em', height: '3em' }}>
+                                <img
+                                    src={ImagianariaLogo}
+                                    alt="logo"
+                                    style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+                                />
+                            </Link>
+                            <IconButton onClick={handleDrawerClose} sx={{ color: 'black' }}>
+                                <CloseIcon />
+                            </IconButton>
+                        </Box>
+                        <Link
+                            to="/"
+                            style={{
+                                color: 'black',
+                                textDecoration: 'none',
+                                fontSize: '2em',
+                                padding: '0.5em',
+                                fontWeight: 'bold'
+                            }}
+                        >
                             Home
-                        </Typography>
+                        </Link>
+                        <Link
+                            to="/about"
+                            style={{
+                                color: 'black',
+                                textDecoration: 'none',
+                                fontSize: '2em',
+                                padding: '0.5em',
+                                fontWeight: 'bold'
+                            }}
+                        >
+                            About Us
+                        </Link>
+                        <Link
+                            to="/newPost"
+                            style={{
+                                color: 'black',
+                                textDecoration: 'none',
+                                fontSize: '2em',
+                                padding: '0.5em',
+                                fontWeight: 'bold'
+                            }}
+                        >
+                            Create Post
+                        </Link>
+                        <Link
+                            to="/contact"
+                            style={{
+                                color: 'black',
+                                textDecoration: 'none',
+                                fontSize: '2em',
+                                padding: '0.5em',
+                                fontWeight: 'bold'
+                            }}
+                        >
+                            Contact Us
+                        </Link>
+                        {/* Instagram Link */}
+                        <Box sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            mt: 'auto'
+                        }}>
+                            <Link
+                                to="https://www.instagram.com/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    color: 'black',
+                                    textDecoration: 'none',
+                                    fontSize: '1.5em',
+                                    padding: '0.5em'
+                                }}
+                            >
+                                <InstagramIcon sx={{ fontSize: '2em', mr: '0.5em' }} />
+
+                            </Link>
+                            {/* Twitter Link */}
+                            <Link
+                                to="https://twitter.com/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    color: 'black',
+                                    textDecoration: 'none',
+                                    fontSize: '1.5em',
+                                    padding: '0.5em'
+                                }}
+                            >
+                                <TwitterIcon sx={{ fontSize: '2em', mr: '0.5em' }} />
+                            </Link>
+                        </Box>
                     </Box>
                 </Drawer>
+
             </Drawer>
 
 
@@ -372,4 +496,3 @@ const Hero = () => {
 }
 
 export default Hero
-
