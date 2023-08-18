@@ -49,7 +49,7 @@ const Search = styled('div')(({ theme }) => ({
     borderRadius: '1.5em',
     [theme.breakpoints.up('sm')]: {
         marginLeft: theme.spacing(3),
-        width: '50%',
+        width: '40%',
     },
 }));
 
@@ -65,13 +65,15 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
     color: 'inherit',
+    textAlign: 'center',
+    justifyContent: 'center',
     '& .MuiInputBase-input': {
         // vertical padding + font size from searchIcon
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
         transition: theme.transitions.create('width'),
-        width: '50%', // Set width to 100% to make it full width
+        width: '100%', // Set width to 100% to make it full width
         [theme.breakpoints.up('md')]: {
-            width: '20em', // Adjust this value to control the width on larger screens if needed
+            width: '100%', // Adjust this value to control the width on larger screens if needed
         },
     },
 }));
@@ -270,67 +272,18 @@ export default function Navbar() {
                                 <SearchIcon />
                             </SearchIconWrapper>
                             <StyledInputBase
-                                placeholder="Search AI generated images"
+                                placeholder="Search by style,medium or artist"
                                 inputProps={{ 'aria-label': 'search' }}
                                 value={searchKeywords}
                                 onChange={(e) => setSearchKeywords(e.target.value)}
                                 onKeyPress={handleKeyPress}
                             />
                         </Box>
-                        {/* Category */}
-                        <Button
-                            id="demo-customized-button"
-                            aria-controls={openCategory ? 'demo-customized-menu' : undefined}
-                            aria-haspopup="true"
-                            aria-expanded={openCategory ? 'true' : undefined}
-                            variant="contained"
-                            disableElevation
-                            onClick={handleClick}
-                            endIcon={<KeyboardArrowDownIcon />}
-                            sx={{
-                                bgcolor: 'white',
-                                border: '1px solid lightgray',
-                                borderRadius: '0.9em',
-                                color: 'black',
-                                padding: '0.5em',
-                                ml: 'auto',
-                                ":hover": {
-                                    bgcolor: 'white',
-                                }
-                            }}
-                        >
-                            <LanguageIcon sx={{ color: 'black' }} />    All
-                        </Button>
-                        <StyledMenu
-                            id="demo-customized-menu"
-                            MenuListProps={{
-                                'aria-labelledby': 'demo-customized-button',
-                            }}
-                            anchorEl={anchorEl}
-                            open={openCategory}
-                            onClose={handleClose}
-                        >
-                            <MenuItem onClick={() => navigate(`/filter/${'all'}`)} disableRipple>
-                                <EditIcon />
-                                All
-                            </MenuItem>
-                            <Divider sx={{ my: 0.5 }} />
-                            <MenuItem onClick={() => navigate(`/filter/${'Ilustations'}`)} disableRipple>
-                                <FileCopyIcon />
-                                Ilustations
-                            </MenuItem>
-                            <MenuItem onClick={() => navigate(`/filter/${'Style'}`)} disableRipple>
-                                <ArchiveIcon />
-                                Style
-                            </MenuItem>
-
-                        </StyledMenu>
-                        {/* Category   */}
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                         <CustomLink to="/about">About Freeflo</CustomLink>
-                        <CustomLink to={ifUser !== '' ? "/newPost" : "/becomeACreator"}>{ifUser !== '' ? "Create post" : 'Become a creator'}</CustomLink>
+                        <CustomLink to={ifUser !== '' ? "/newPost" : "/becomeACreator"}>{ifUser !== '' ? "Create post" : 'Login'}</CustomLink>
                         <Link to="/contact">
                             <CustomEmailIcon />
                         </Link>
