@@ -73,7 +73,7 @@ const BoxContainer = styled(Box)(({ theme }) => ({
     height: '100%',
     alignItems: 'center',
     justifyItems: 'center',
-    marginTop: '1.5em',
+    marginTop: '5em',
     [theme.breakpoints.down('sm')]: {
         alignItems: 'start',
         justifyItems: 'flex-start',
@@ -200,7 +200,7 @@ const Hero = () => {
     return (
         <Box sx={{
             width: '100%',
-            height: { xs: '25vh', sm: '40vh', md: '70vh' },
+            height: { xs: '25vh', sm: '50vh', md: '70vh' },
             backgroundImage: `url(${HeroImage})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
@@ -253,7 +253,8 @@ const Hero = () => {
                             fontWeight: 600,
                             fontSize: '0.9em',
                             alignItems: 'center',
-                            display: { xs: 'none', md: 'flex' }
+                            display: { xs: 'none', md: 'flex' },
+                            textDecoration:'none'
                         }}>
                             Log in
                         </Link>
@@ -276,15 +277,16 @@ const Hero = () => {
                 </Link>
             </Box>
             <BoxContainer >
-                <Typography sx={{ fontSize: '2.3em', color: 'white' }}>imaginaria</Typography>
-                <Typography sx={{ fontSize: '1.2em', mb: '2em', color: 'white', display: { xs: 'none', sm: 'flex' } }}>Free, curated AI images and prompts for creative projects</Typography>
+                <Typography sx={{ fontSize: '2.3em', color: 'white' }}>Imaginaria</Typography>
+                <Typography sx={{ fontSize: '1.2em', mb: '2em', color: 'white', display: { xs: 'none', sm: 'flex' } }}>Where AI meets human creativity. Your source for inspiration and AI-generated images.
+                </Typography>
                 <Search sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Box>
                         <SearchIconWrapper>
                             <SearchIcon />
                         </SearchIconWrapper>
                         <StyledInputBase
-                            placeholder="Search AI generated images"
+                            placeholder="Search by style,medium or artist"
                             inputProps={{ 'aria-label': 'search' }}
                             value={searchKeywords}
                             onChange={(e) => setSearchKeywords(e.target.value)}
@@ -496,3 +498,4 @@ const Hero = () => {
 }
 
 export default Hero
+
