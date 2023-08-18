@@ -2,12 +2,7 @@ import React from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
 import { Box, Typography, Link } from '@mui/material'
-import TopImageLeft1 from '../../images/about/image.webp'
-import TopImageLeft2 from '../../images/about/top_left.webp'
-import TopImageRight1 from '../../images/about/top_right.webp'
-import TopImageRight2 from '../../images/about/bottom_right.webp'
 import styled from '@emotion/styled'
-
 
 import { useState } from 'react';
 import { createNewUser, storage } from '../lib/firebase';
@@ -55,7 +50,13 @@ const ImageContainer = styled(Box)({
 
 });
 
-
+const styles = {
+    focusedInput: {
+        '& input': {
+            color: 'black',
+        },
+    },
+};
 
 const SignupPage = () => {
     const SOCIALS = [
@@ -182,41 +183,40 @@ const SignupPage = () => {
     };
 
     return (
-        <div>
-            <Box sx={{
-                position: 'relative',
-            }}>
+        <Box>
+            <Box 
+           
+                sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' ,position: 'relative'}}
+            >
                 <Navbar />
                 <Box sx={{
-                    backgroundColor: '#171717',
-                    color: 'white',
+                    backgroundColor: 'white',
+                    color: 'black',
                     width: '100%',
-                    height: '100%',
+                
                     display: 'flex',
                     flexDirection: 'row',
                     justifyContent: 'space-around',
-                    position: 'relative',
                 }}>
 
                     <Box display="flex" alignItems="center" mr={10} sx={{
                         widths: '100%',
-                        height: '100%',
-                        position: 'relative',
+              
                         my: '5em',
                         mx: 'auto'
                     }}>
-                        <form onSubmit={handleSubmit} style={{ width: '100%', height: '100%', display: 'flex' }}>
+                        <form onSubmit={handleSubmit} style={{ width: '100%', display: 'flex' }}>
                             <Box sx={{
                                 display: 'flex',
                                 flexDirection: { xs: 'column', md: 'row' }
                             }}>
                                 <Box gap={10} mr={15}>
-                                    <Typography variant="h4" align="left" gutterBottom>
-                                        Register to  Become a creator
+                                    <Typography variant="h4" fontWeight={700} mb={5} align="left" gutterBottom>
+                                        Register to  Imaginaria
                                     </Typography>
-                                    <Box className="left" sx={{ mb: { xs: '2em', sm: 0 }, width: '15em', height: '9em', display: 'block' }}>
+                                    <Box className="left" sx={{ mb: { xs: '2em', sm: 0 }, width: '15em', height: '13em', display: 'block' }}>
                                         <img width={'full'} style={{ objectFit: 'cover' }} height={150} src={file ? URL.createObjectURL(file) : UploadIcon} alt="" />
-                                        <Box className="formInput" sx={{ my: '2em' }}>                                           
+                                        <Box className="formInput" sx={{ my: '2em' }}>
                                             <label htmlFor="file">Click to upload Profile Image</label>
                                             <input type="file" id="file" style={{ display: 'none' }} onChange={(e) => setFile(e.target.files[0])} />
                                         </Box>
@@ -227,8 +227,11 @@ const SignupPage = () => {
                                         <Button
                                             variant="contained"
                                             disabled={socialLinks.length >= SOCIALS.length}
-
                                             onClick={() => handleAddSocialLink(SOCIALS[socialLinks.length])}
+                                            style={{
+                                                display: socialLinks.length >= SOCIALS.length ? 'none' : 'block'
+                                            }}
+
                                         >
                                             Add Social Link
                                         </Button>
@@ -245,7 +248,7 @@ const SignupPage = () => {
                                                                         title="Delete"
                                                                         onClick={() => handleRemoveSocialLink(item)}
                                                                     >
-                                                                        <DeleteIcon sx={{ color: 'white' }} />
+                                                                        <DeleteIcon sx={{ color: 'black' }} />
                                                                     </IconButton>
                                                                 }
                                                             >
@@ -259,7 +262,7 @@ const SignupPage = () => {
                                                                 />
                                                                 <TextField
                                                                     sx={{
-                                                                        color: 'white'
+                                                                        color: 'black'
                                                                     }}
                                                                     placeholder="Social Link"
                                                                     variant="outlined"
@@ -272,11 +275,11 @@ const SignupPage = () => {
                                                                         setSocialLinks(updatedLinks);
                                                                     }}
                                                                     InputProps={{
-                                                                        style: { color: 'white', marginLeft: '2em', border: 'white' }, // Set the text color
+                                                                        style: { color: 'black', marginLeft: '2em', border: 'white' }, // Set the text color
 
                                                                     }}
                                                                     InputLabelProps={{
-                                                                        style: { color: 'white' }, // Set the label color
+                                                                        style: { color: 'black' }, // Set the label color
                                                                     }}
                                                                 />
                                                             </ListItem>
@@ -288,7 +291,7 @@ const SignupPage = () => {
                                     </div>
                                 </Box>
 
-                                <Box position={'relative'}>
+                                <Box >
                                     <div style={{ marginBottom: '16px', display: 'block', marginTop: '3em' }}>
                                         <Typography variant="body1" fontWeight="bold">
                                             Email:
@@ -299,6 +302,11 @@ const SignupPage = () => {
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             style={{ backgroundColor: '#262626', minWidth: '20em' }}
+                                            sx={styles.focusedInput}
+                                            inputProps={{
+                                                style: { color: 'white' },
+                                            }}
+
                                         />
                                     </div>
                                     <div style={{ marginBottom: '16px', display: 'block', marginTop: '1em' }}>
@@ -311,6 +319,9 @@ const SignupPage = () => {
                                             value={name}
                                             onChange={(e) => setName(e.target.value)}
                                             style={{ backgroundColor: '#262626', minWidth: '20em' }}
+                                            inputProps={{
+                                                style: { color: 'white' },
+                                            }}
                                         />
                                     </div>
                                     <div style={{ marginBottom: '16px', display: 'block', marginTop: '1em' }}>
@@ -323,6 +334,9 @@ const SignupPage = () => {
                                             value={bio}
                                             onChange={(e) => setBio(e.target.value)}
                                             style={{ backgroundColor: '#262626', minWidth: '20em' }}
+                                            inputProps={{
+                                                style: { color: 'white' },
+                                            }}
                                         />
                                     </div>
                                     <div style={{ marginBottom: '16px', display: 'block', marginTop: '1em' }}>
@@ -335,9 +349,12 @@ const SignupPage = () => {
                                             value={country}
                                             onChange={(e) => setCountry(e.target.value)}
                                             style={{ backgroundColor: '#262626', minWidth: '20em' }}
+                                            inputProps={{
+                                                style: { color: 'white' },
+                                            }}
                                         />
                                     </div>
-                                    <div style={{ marginBottom: '1.5em' }}>
+                                    <div style={{ marginBottom: '1.5em', color: 'black' }}>
                                         <Typography variant="body1" fontWeight="bold">
                                             Password:
                                         </Typography>
@@ -347,7 +364,10 @@ const SignupPage = () => {
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                             variant="outlined"
-                                            style={{ backgroundColor: '#262626' }}
+                                            style={{ backgroundColor: '#262626', color: 'white' }}
+                                            inputProps={{
+                                                style: { color: 'white' },
+                                            }}
                                         />
                                     </div>
                                     <Button variant="contained" color="warning" type="submit" fullWidth>
@@ -358,7 +378,7 @@ const SignupPage = () => {
                                             Already a member?
                                         </Typography>
                                         <Link sx={{
-                                            color: 'white',
+                                            color: 'black',
                                         }} href="/becomeACreator">Sign in now</Link>
                                     </div>
 
@@ -369,8 +389,7 @@ const SignupPage = () => {
                 </Box>
             </Box>
             <Footer />
-
-        </div>
+        </Box>
     )
 }
 
