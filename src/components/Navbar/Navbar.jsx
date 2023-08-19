@@ -283,6 +283,8 @@ export default function Navbar() {
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                         <CustomLink to="/about">About Imaginaria</CustomLink>
+                         <CustomLink to="/signup">Register</CustomLink>
+                        
                         <CustomLink to={ifUser !== '' ? "/newPost" : "/becomeACreator"}>{ifUser !== '' ? "Create post" : 'Login'}</CustomLink>
                         <Link to="/contact">
                             <CustomEmailIcon />
