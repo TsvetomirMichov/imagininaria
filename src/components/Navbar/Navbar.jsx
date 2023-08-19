@@ -282,7 +282,7 @@ export default function Navbar() {
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        <CustomLink to="/about">About Freeflo</CustomLink>
+                        <CustomLink to="/about">About Imaginaria</CustomLink>
                         <CustomLink to={ifUser !== '' ? "/newPost" : "/becomeACreator"}>{ifUser !== '' ? "Create post" : 'Login'}</CustomLink>
                         <Link to="/contact">
                             <CustomEmailIcon />
