@@ -252,7 +252,7 @@ export default function Navbar() {
 
         }
     };
-
+    console.log(loggedUser);
     return (
         <Box sx={{ flexGrow: 1, zIndex: 100, width: '100%' }}>
             <AppBar position="static" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.85)' }}>
@@ -279,21 +279,12 @@ export default function Navbar() {
                                 onKeyPress={handleKeyPress}
                             />
                         </Box>
+                
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        <CustomLink to="/about">About Imaginaria</CustomLink>
-                         <CustomLink to="/signup">Register</CustomLink>
-                        
-                        <CustomLink to={ifUser !== '' ? "/newPost" : "/becomeACreator"}>{ifUser !== '' ? "Create post" : 'Login'}</CustomLink>
-                        <Link to="/contact">
-                            <CustomEmailIcon />
-                        </Link>
-
-                    </Box>
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="My Account">
-                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, display: { xs: 'none', sm: 'block' } }}>
+                            <IconButton onClick={handleOpenUserMenu} sx={{ px: 5, display: { xs: 'none', sm: 'block' } }}>
                                 <Avatar alt="Remy Sharp" src={loggedUser?.profileImage} />
                             </IconButton>
                         </Tooltip>
@@ -354,8 +345,8 @@ export default function Navbar() {
                         </Menu>
                     </Box>
 
-                    <Box sx={{ display: { xs: 'flex', md: 'hidden' } }}>
-                        <IconButton edge="start" aria-label="menu" onClick={handleDrawerOpen} sx={{ display: { xs: 'flex', md: 'none' }, ml: 0, p: 0, color: 'black' }}>
+                    <Box sx={{ display: { xs: 'flex', md: 'flex' } }}>
+                        <IconButton edge="start" aria-label="menu" onClick={handleDrawerOpen} sx={{ display: { xs: 'flex', md: 'flex' }, mr: 2, p: 0, color: 'black' }}>
                             <MenuIcon />
                         </IconButton>
                     </Box>
@@ -365,7 +356,7 @@ export default function Navbar() {
                         open={open}
                         onClose={handleDrawerClose}
                         sx={{
-                            display: { xs: 'flex', sm: 'flex', md: 'none', lg: 'none', xl: 'none' },
+                            display: { xs: 'flex', sm: 'flex' },
                             width: '100%',
                             height: '100%',
                         }}
@@ -412,7 +403,7 @@ export default function Navbar() {
                                     textDecoration: 'none',
                                     fontSize: '2em',
                                     padding: '0.5em',
-                                    fontWeight:'bold'
+                                    fontWeight: 'bold'
                                 }}
                             >
                                 Home
@@ -424,7 +415,7 @@ export default function Navbar() {
                                     textDecoration: 'none',
                                     fontSize: '2em',
                                     padding: '0.5em',
-                                    fontWeight:'bold'
+                                    fontWeight: 'bold'
                                 }}
                             >
                                 About Us
@@ -436,7 +427,7 @@ export default function Navbar() {
                                     textDecoration: 'none',
                                     fontSize: '2em',
                                     padding: '0.5em',
-                                    fontWeight:'bold'
+                                    fontWeight: 'bold'
                                 }}
                             >
                                 Create Post
@@ -448,16 +439,65 @@ export default function Navbar() {
                                     textDecoration: 'none',
                                     fontSize: '2em',
                                     padding: '0.5em',
-                                    fontWeight:'bold'
+                                    fontWeight: 'bold'
                                 }}
                             >
                                 Contact Us
                             </Link>
+                            {
+                                loggedUser?.profileImage ?
+                                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                        <Link to={`/user/:${ifUser}`} style={{
+                                            color: 'black',
+                                            textDecoration: 'none',
+                                            fontSize: '2em',
+                                            padding: '0.5em',
+                                            fontWeight: 'bold'
+                                        }} >
+                                            My Account
+                                        </Link>
+                                    </Box>
+                                    :
+                                    <Link to="/becomeACreator" sx={{
+                                        px: '1em',
+                                        color: 'white',
+                                        fontWeight: 600,
+                                        fontSize: '0.9em',
+                                        alignItems: 'center',
+                                        textDecoration: 'none', // Add this to remove underline
+                                    }}
+                                    style={{
+                                        color: 'black',
+                                        textDecoration: 'none',
+                                        fontSize: '2em',
+                                        padding: '0.5em',
+                                        fontWeight: 'bold'
+                                    }}>
+                                        Log in
+                                    </Link>
+                            }
+                            <Link to="/singup" sx={{
+                                px: '1em',
+                                color: 'white',
+                                fontWeight: 600,
+                                fontSize: '0.9em',
+                                alignItems: 'center',
+                                textDecoration: 'none', // Add this to remove underline
+                            }}
+                            style={{
+                                color: 'black',
+                                textDecoration: 'none',
+                                fontSize: '2em',
+                                padding: '0.5em',
+                                fontWeight: 'bold'
+                            }}>
+                                Register
+                            </Link>
                             {/* Instagram Link */}
                             <Box sx={{
-                                display:'flex',
+                                display: 'flex',
                                 flexDirection: 'row',
-                                mt:'auto'
+                                mt: 'auto'
                             }}>
                                 <Link
                                     to="https://www.instagram.com/"
