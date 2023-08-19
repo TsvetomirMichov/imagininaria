@@ -1,17 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { addDoc, collection } from "firebase/firestore";
-import { auth, firestore, storage } from "../lib/firebase"
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react'
 import Navbar from '../../components/Navbar/Navbar';
 import { Box, Button, TextField, Typography } from '@mui/material';
 
-
 import Footer from '../../components/Footer/Footer'
-import TopImageLeft1 from '../../images/contact/contact_downleft.webp'
-import TopImageLeft2 from '../../images/contact/contact_downright.webp'
-import TopImageRight1 from '../../images/contact/contact_upleft.webp'
-import TopImageRight2 from '../../images/contact/top_left.webp'
+import TopImageLeft1 from '../../images/Imaginaria-Contact-Image.jpg'
 import styled from '@emotion/styled'
 
 const BoxTop = styled(Box)(({ theme }) => ({
@@ -38,13 +30,11 @@ const ImageContainer = styled(Box)({
     },
 });
 
-const Contact = ({ title }) => {
-    const [file, setFile] = useState("")
+const Contact = () => {
+    // const [file, setFile] = useState("")
 
     const HandleSubmit = (e) => {
         e.preventDefault(); // Prevent default form submission behavior
-
-
     }
 
     return (
@@ -62,30 +52,10 @@ const Contact = ({ title }) => {
                     display: 'flex',
                     flexDirection: 'row',
                     justifyContent: 'space-around',
-                    py:15
+                    alignItems:'center',
+                    py: 15
                 }}>
-                    <BoxTop sx={{ mt: '1em', padding: '1.5em', display: { xs: 'none', sm: 'flex' } }}>
 
-                        <Box sx={{ display: 'flex', flexDirection: 'row', mt: '-1em', mr: '1em' }}>
-
-                            <Box gap={5} mt={2} p={{ xs: 4, sm: 5 }} position={'relative'} sx={{ display: 'flex', flexDirection: 'column' }}>
-
-                                <ImageContainer>
-                                    <img src={TopImageRight1} width={190} height={230} alt="Image 5" />
-                                </ImageContainer>
-
-                                <img src={TopImageLeft2} width={190} height={230} alt="Image 3" />
-
-                            </Box>
-                            <Box gap={5} position={'relative'} sx={{ display: 'flex', flexDirection: 'column' }}>
-                                <ImageContainer>
-                                    <img src={TopImageLeft1} width={190} height={230} alt="Image 5" />
-                                </ImageContainer>
-
-                                <img src={TopImageRight2} width={190} height={230} alt="Image 3" />
-                            </Box>
-                        </Box>
-                    </BoxTop>
                     <Box
                         className="new"
                         sx={{
@@ -105,8 +75,6 @@ const Contact = ({ title }) => {
                                 flexDirection: 'column',
                             }}
                         >
-
-
                             <Box
                                 className="bottom"
                                 sx={{
@@ -117,28 +85,28 @@ const Contact = ({ title }) => {
                                 }}>
 
 
-                                <Box className="right" sx={{ ml: { xs: 0, sm: '2em' } }}>
+                                <Box className="right" sx={{ ml: { xs: 0, sm: '2em' },maxWidth:'40em' }}>
                                     <Box sx={{
-                                        py: 3,color:'black'
+                                        py: 3, color: 'black'
                                     }}>
                                         <Typography variant='h4' fontWeight={800}>
-                                        Any questions or suggestions? 
+                                            Any questions or suggestions?
                                         </Typography>
                                         <Typography variant='h5' fontWeight={700}>
-                                        We'd love to hear from you!
+                                            We'd love to hear from you!
                                         </Typography>
                                     </Box>
 
                                     <form onSubmit={HandleSubmit}>
-                                        <TextField   fullWidth
+                                        <TextField fullWidth
                                             label="Name"
                                             variant="filled"
                                             InputProps={{
                                                 style: { color: 'black', backgroundColor: 'white' },
                                             }}
 
-                                            sx={{ mb: '1em' }}   />
-                                        
+                                            sx={{ mb: '1em' }} />
+
 
 
                                         <TextField
@@ -161,7 +129,9 @@ const Contact = ({ title }) => {
 
                                             sx={{ mb: '1em' }}
                                         />
-                                        <Button variant="contained" color="warning" type="submit" >
+                                        <Button variant="contained" color="warning" type="submit" sx={{
+                                            my:'1.5em'
+                                        }} >
                                             Submit
                                         </Button>
                                     </form>
@@ -169,6 +139,16 @@ const Contact = ({ title }) => {
                             </Box>
                         </Box>
                     </Box>
+
+                    <BoxTop sx={{ mt: '1em', padding: '1.5em', display: { xs: 'none', sm: 'flex' } }}>
+
+                        <Box sx={{ display: 'flex', flexDirection: 'row', mt: '-1em', mr: '1em' }}>
+
+                            <Box gap={5} position={'relative'} sx={{ display: 'flex', flexDirection: 'column',width:'100%',height:'20em' }}>
+                                    <img src={TopImageLeft1} width={'100%'} height={'100%'} style={{objectFit:'cover'}} alt="Image 5" />
+                            </Box>
+                        </Box>
+                    </BoxTop>
                 </Box>
             </Box>
             <Footer />
