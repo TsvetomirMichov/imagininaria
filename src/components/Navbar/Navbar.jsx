@@ -476,7 +476,7 @@ export default function Navbar() {
                                         Log in
                                     </Link>
                             }
-                            <Link to="/singup" sx={{
+                            <Link to="/signup" sx={{
                                 px: '1em',
                                 color: 'white',
                                 fontWeight: 600,
