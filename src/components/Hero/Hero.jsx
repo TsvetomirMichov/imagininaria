@@ -200,7 +200,7 @@ const Hero = () => {
     return (
         <Box sx={{
             width: '100%',
-            height: { xs: '25vh', sm: '50vh', md: '100%' },
+            height: { xs: '25vh', sm: '50vh', md: '80vh' },
             backgroundImage: `url(${HeroImage})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
