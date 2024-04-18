@@ -329,7 +329,7 @@ export default function Navbar() {
                                 All
                             </MenuItem>
                             <Divider sx={{ my: 0.5 }} />
-                            <MenuItem onClick={() => navigate(`/filter/${'Ilustations'}`)} disableRipple>
+                            <MenuItem onClick={() => navigate(`/filter/${'lens'}`)} disableRipple>
                                 <FileCopyIcon />
                                 Ilustations
                             </MenuItem>
