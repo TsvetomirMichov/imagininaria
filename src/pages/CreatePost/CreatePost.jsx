@@ -51,24 +51,30 @@ const CreatePost = ({ title }) => {
     const [postDetails, setPostDetails] = useState({
         prompt: '',
         userEmail: user?.email,
-        userId: user?.uid,
+        userId: user?.uid,  
         imageData: ''
     });
 
     const inserDate = async () => {
         console.log('start inserting')
-       let res= await addDoc(collection(firestore, 'posts'), {
+        let res = await addDoc(collection(firestore, 'posts'), {
             ...postDetails
         });
-        if(res.id){
+        if (res.id) {
             setFile("")
-            postDetails.prompt=''
+            postDetails.prompt = ''
         }
-
-
     }
 
-    const HandleSubmit = (e) => {
+    const navigate=useNavigate()
+    useEffect(()=>{
+        if(!user?.uid){
+            navigate("/")
+        }
+
+    },[user])
+
+    const HandleSubmit = async (e) => {
         e.preventDefault(); // Prevent default form submission behavior
 
         if (postDetails.prompt !== '' && postDetails.userEmail !== null && postDetails.imageData !== null && file) {
@@ -108,11 +114,13 @@ const CreatePost = ({ title }) => {
                         }
                     );
                 }
-                uploadImage()
-                console.log('postDetails ',postDetails.imageData)
+                await uploadImage()
+                console.log('postDetails ', postDetails.imageData)
                 if (postDetails.imageData !== '') {
-                    inserDate()
+                    await inserDate(); // Insert data into Firestore
                 }
+
+               
 
             } catch (err) {
                 console.log(err)
