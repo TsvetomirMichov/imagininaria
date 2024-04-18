@@ -330,14 +330,11 @@ const Hero = () => {
                             All
                         </MenuItem>
                         <Divider sx={{ my: 0.5 }} />
-                        <MenuItem onClick={() => navigate(`/filter/${'Ilustations'}`)} disableRipple>
+                        <MenuItem onClick={() => navigate(`/filter/${'lens'}`)} disableRipple>
                             <AddAPhotoIcon />
                             Phototgraphy
                         </MenuItem>
-                        <MenuItem onClick={() => navigate(`/filter/${'Ilustations'}`)} disableRipple>
-                            <FileCopyIcon />
-                            Illustrations
-                        </MenuItem>
+                
                         <MenuItem onClick={() => navigate(`/filter/${'Style'}`)} disableRipple>
                             <ArchiveIcon />
                             Style
